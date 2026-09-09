@@ -109,10 +109,10 @@
     handlers.push(function () {
       var y = window.scrollY;
       if (y > window.innerHeight * 1.2) return;
-      if (heroBg) heroBg.style.transform = 'translate3d(0,' + (y * 0.18).toFixed(1) + 'px,0)';
+      if (heroBg) heroBg.style.transform = 'translate3d(0,' + (y * 0.28).toFixed(1) + 'px,0)';
       // Each chip drifts at its own rate, so they separate as the page moves.
       chips.forEach(function (chip) {
-        var speed = parseFloat(chip.getAttribute('data-speed')) || 0.1;
+        var speed = parseFloat(chip.getAttribute('data-speed')) || 0.12;
         chip.style.transform = 'translate3d(0,' + (-y * speed).toFixed(1) + 'px,0)';
       });
     });
@@ -194,13 +194,64 @@
     syncProcess();
   }
 
+
+  /* --- Reviews: fan the stacked cards out on reveal ---------------------- */
+
+  var reviews = document.querySelector('.reviews');
+  if (reviews) {
+    var fanCards = reviews.querySelectorAll('.review');
+
+    var layoutFan = function () {
+      var isStatic = prefersStatic() || window.matchMedia('(max-width: 1100px)').matches;
+      reviews.classList.toggle('reviews--static', isStatic);
+      if (isStatic) {
+        fanCards.forEach(function (c) { c.style.transform = ''; c.style.opacity = ''; });
+      }
+      return isStatic;
+    };
+
+    var fanOut = function () {
+      if (layoutFan()) return;
+      fanCards.forEach(function (card, i) {
+        var rot = card.getAttribute('data-rot') || 0;
+        var x = card.getAttribute('data-x') || 0;
+        var y = card.getAttribute('data-y') || 0;
+        setTimeout(function () {
+          card.style.transform = 'translate(' + x + 'px,' + y + 'px) rotate(' + rot + 'deg)';
+          card.style.opacity = '1';
+        }, i * 90);
+      });
+    };
+
+    if ('IntersectionObserver' in window) {
+      var fanObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          fanOut();
+          fanObserver.disconnect();
+        });
+      }, { threshold: 0.2 });
+      fanObserver.observe(reviews);
+    } else {
+      fanOut();
+    }
+    window.addEventListener('resize', layoutFan);
+    layoutFan();
+  }
+
   /* --- FAQ accordion ---------------------------------------------------- */
 
   var faqButtons = document.querySelectorAll('.faq__q');
-  faqButtons.forEach(function (btn) {
+  faqButtons.forEach(function (btn, i) {
     var panel = document.getElementById(btn.getAttribute('aria-controls'));
     if (!panel) return;
-    panel.style.height = '0px';
+    // The canvas ships with the first question already open.
+    if (i === 0) {
+      btn.setAttribute('aria-expanded', 'true');
+      requestAnimationFrame(function () { panel.style.height = panel.scrollHeight + 'px'; });
+    } else {
+      panel.style.height = '0px';
+    }
 
     btn.addEventListener('click', function () {
       var isOpen = btn.getAttribute('aria-expanded') === 'true';

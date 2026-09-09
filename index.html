@@ -84,9 +84,6 @@
       <img class="site-header__logo-primary" src="/assets/img/logo-primary.png" alt="" aria-hidden="true" width="1500" height="1500">
     </a>
 
-    <!-- The canvas nav also carries a Reviews link. The testimonial section it
-         points at is not built (its quotes are placeholder copy), so the link
-         is left out rather than pointed at nothing. Restore both together. -->
     <nav class="nav" aria-label="Primary">
       <div class="nav__dd">
         <a class="nav__link" href="#services">
@@ -109,6 +106,7 @@
 
       <a class="nav__link" href="#about">About</a>
       <a class="nav__link" href="#areas">Areas We Serve</a>
+      <a class="nav__link" href="#reviews">Reviews</a>
       <a class="nav__link" href="#blog">Blog</a>
       <a class="nav__phone" href="tel:9415547546">941-554-7546</a>
       <a class="btn btn--primary" href="#book">Book a Consultation</a>
@@ -127,6 +125,7 @@
   <a href="#about">About</a>
   <a href="#process">How We Work</a>
   <a href="#areas">Areas We Serve</a>
+  <a href="#reviews">Reviews</a>
   <a href="#faq">FAQ</a>
   <a href="#blog">Blog</a>
   <a href="tel:9415547546">941-554-7546</a>
@@ -257,15 +256,22 @@
         </div>
       </div>
 
-      <!-- The canvas builds this card around a "96% treatment satisfaction,
-           +2.4%" figure. That block is not built: a quantified outcomes claim
-           needs a substantiated source before it can be advertised. The card
-           and its marquees are otherwise as designed — drop the stat back in
-           above the marquees once there is a source. -->
+      <!-- PLACEHOLDER CONTENT. The 96% / +2.4% figures come from the design
+           canvas and have no source behind them yet. Advertised outcome claims
+           a practice cannot substantiate are an FTC exposure — replace these
+           with real, sourced numbers or remove the stat block before this site
+           points at a customer-facing domain. -->
       <div class="outcomes reveal">
         <div class="outcomes__head">
-          <div class="outcomes__title">One roof</div>
-          <p class="outcomes__sub">Eight connected services, one clinic</p>
+          <div class="outcomes__title">Patient outcomes</div>
+          <p class="outcomes__sub">In the past 12 months</p>
+        </div>
+        <div class="outcomes__stat">
+          <div class="outcomes__stat-row">
+            <span class="outcomes__figure">96%</span>
+            <span class="outcomes__delta">+2.4%</span>
+          </div>
+          <p class="outcomes__caption">Treatment satisfaction</p>
         </div>
         <div class="outcomes__body">
           <div class="pill-marquee" aria-hidden="true">
@@ -498,6 +504,73 @@
       </div>
 
     </div>
+  </div>
+</section>
+
+
+<!-- ===== Reviews =======================================================
+     PLACEHOLDER CONTENT. All four quotes, names and roles come from the
+     design canvas and are invented. Publishing fabricated patient
+     testimonials is not something a medical practice can do — swap in real,
+     attributable quotes with the patient's permission, or delete this
+     section, before the site points at a customer-facing domain.
+     ==================================================================== -->
+<section class="reviews" id="reviews">
+  <div class="reviews__head reveal">
+    <p class="eyebrow eyebrow--center">Reviews</p>
+    <h2 class="section-title reviews__title">Trusted by patients<br><em>across the Gulf Coast</em></h2>
+    <p class="section-sub section-sub--center">Real results from real patients in Bradenton, Sarasota, and beyond.</p>
+  </div>
+
+  <!-- The cards fan out from a stack; main.js reads data-rot/x/y per card. -->
+  <div class="reviews__fan">
+    <article class="review review--1" data-rot="-11" data-x="-390" data-y="34">
+      <div class="review__person">
+        <span class="review__avatar">SM</span>
+        <span>
+          <span class="review__name">Sarah M.</span>
+          <span class="review__role">Injectables patient, Sarasota</span>
+        </span>
+      </div>
+      <p class="review__head">Natural, and finally me.</p>
+      <p class="review__quote">&ldquo;Dr. Chapman took time to understand the whole picture. My results look natural, and I feel like myself again.&rdquo;</p>
+    </article>
+
+    <article class="review review--2" data-rot="-4" data-x="-130" data-y="6">
+      <div class="review__person">
+        <span class="review__avatar">RT</span>
+        <span>
+          <span class="review__name">Rebecca T.</span>
+          <span class="review__role">Medical weight loss patient</span>
+        </span>
+      </div>
+      <p class="review__head">Energy I forgot I had.</p>
+      <p class="review__quote">&ldquo;The program changed my energy, my sleep, my skin. I only wish I had started sooner.&rdquo;</p>
+    </article>
+
+    <article class="review review--3" data-rot="4" data-x="130" data-y="6">
+      <div class="review__person">
+        <span class="review__avatar">DK</span>
+        <span>
+          <span class="review__name">Daniel K.</span>
+          <span class="review__role">Functional medicine patient</span>
+        </span>
+      </div>
+      <p class="review__head">Care that actually listens.</p>
+      <p class="review__quote">&ldquo;Every visit feels unhurried. The labs explained things no one else had, and the plan finally made sense.&rdquo;</p>
+    </article>
+
+    <article class="review review--4" data-rot="11" data-x="390" data-y="34">
+      <div class="review__person">
+        <span class="review__avatar">LP</span>
+        <span>
+          <span class="review__name">Lauren P.</span>
+          <span class="review__role">Day spa guest, Lakewood Ranch</span>
+        </span>
+      </div>
+      <p class="review__head">An hour that resets the week.</p>
+      <p class="review__quote">&ldquo;Calm, beautiful, and never rushed. The IV drip after my facial was the perfect finish.&rdquo;</p>
+    </article>
   </div>
 </section>
 

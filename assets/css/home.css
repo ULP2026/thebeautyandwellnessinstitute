@@ -829,6 +829,136 @@
   .areas__card { padding: 28px; }
 }
 
+
+/* --- Reviews ------------------------------------------------------------ */
+
+.reviews { background: var(--ivory); padding: 120px 0 72px; }
+.reviews__head {
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.reviews__title { max-width: 760px; }
+
+/* Four cards stacked on one point, fanned out by main.js from each card's
+   data-rot / data-x / data-y once the section scrolls into view. */
+.reviews__fan {
+  position: relative;
+  max-width: var(--container-max);
+  margin: 56px auto 0;
+  padding-inline: var(--gutter);
+  height: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.review {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 300px;
+  margin-left: -150px;
+  padding: 30px 28px;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  transform: translate(0, 40px) rotate(0deg);
+  opacity: 0;
+  transition: transform 0.9s var(--ease-out),
+              opacity 0.7s var(--ease-out),
+              box-shadow 0.4s var(--ease-standard);
+  will-change: transform;
+}
+.review--1 { background: var(--sage-300); color: var(--ink-900); }
+.review--2 { background: var(--teal-700); color: var(--teal-50); }
+.review--3 { background: var(--paper);    color: var(--ink-900); }
+.review--4 { background: var(--gold-300); color: var(--ink-900); }
+
+.review__person { display: flex; align-items: center; gap: 12px; }
+.review__avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(44, 50, 43, 0.12);
+  font-family: var(--font-display);
+  font-weight: var(--fw-semibold);
+  font-size: 0.95rem;
+  flex-shrink: 0;
+}
+.review--2 .review__avatar { background: rgba(239, 243, 242, 0.14); }
+
+.review__name {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: var(--fw-semibold);
+  font-size: 1.05rem;
+}
+.review__role { display: block; font-weight: var(--fw-light); font-size: 0.78rem; opacity: 0.78; }
+
+.review__head {
+  margin: 26px 0 0;
+  font-family: var(--font-display);
+  font-weight: var(--fw-semibold);
+  font-size: 1.35rem;
+  line-height: 1.2;
+}
+.review__quote { margin: 14px 0 0; font-weight: var(--fw-light); font-size: 0.9rem; line-height: 1.6; opacity: 0.85; }
+
+/* Stacked and upright when there is no room to fan, no JS, or reduced motion. */
+.no-js .reviews__fan,
+.reviews--static .reviews__fan {
+  height: auto;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+.no-js .review,
+.reviews--static .review {
+  position: static;
+  margin-left: 0;
+  transform: none !important;
+  opacity: 1;
+}
+
+@media (max-width: 1100px) {
+  .reviews__fan { height: auto; flex-wrap: wrap; gap: 20px; }
+  .review { position: static; margin-left: 0; transform: none !important; opacity: 1; }
+}
+@media (max-width: 900px) { .reviews { padding: 80px 0 56px; } }
+
+/* --- About: the outcomes figure ----------------------------------------- */
+
+.outcomes__stat { padding: 28px 20px 8px; }
+.outcomes__stat-row { display: flex; align-items: center; gap: 12px; }
+.outcomes__figure {
+  font-family: var(--font-display);
+  font-weight: var(--fw-display);
+  font-size: 3.6rem;
+  line-height: 1;
+  color: var(--sage-200);
+}
+.outcomes__delta {
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  background: rgba(231, 235, 223, 0.92);
+  font-weight: var(--fw-medium);
+  font-size: 12px;
+  color: var(--ink-900);
+}
+.outcomes__caption {
+  margin: 10px 0 0;
+  font-weight: var(--fw-light);
+  font-size: 0.85rem;
+  color: rgba(236, 240, 238, 0.65);
+}
+
 /* --- FAQ ---------------------------------------------------------------- */
 
 .faq { background: var(--ivory); padding: 120px 0 40px; }
@@ -857,7 +987,10 @@
   overflow: hidden;
   transition: background 0.4s var(--ease-standard), border-color 0.4s var(--ease-standard);
 }
-.faq__item:has(.faq__q[aria-expanded="true"]) { background: var(--paper); border-color: var(--sage-300); }
+.faq__item:has(.faq__q[aria-expanded="true"]) { background: var(--teal-900); border-color: var(--teal-900); }
+.faq__item:has(.faq__q[aria-expanded="true"]) .faq__q { color: #F5F2EA; }
+.faq__item:has(.faq__q[aria-expanded="true"]) .faq__a > div { color: rgba(236, 240, 238, 0.72); }
+.faq__item:has(.faq__q[aria-expanded="true"]) .faq__icon { color: #F5F2EA; border-color: rgba(245, 242, 234, 0.5); }
 
 .faq__q {
   width: 100%;
