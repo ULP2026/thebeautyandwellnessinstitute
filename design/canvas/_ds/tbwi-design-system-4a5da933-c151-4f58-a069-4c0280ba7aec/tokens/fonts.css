@@ -1,0 +1,12 @@
+/* ============================================================
+   TBWI — Webfonts
+   ------------------------------------------------------------
+   SUBSTITUTION NOTE: The brand's exact fonts were not provided
+   (the design-system guide PDF did not come through). These are
+   close Google Fonts matches to the primary logo lockup:
+     • Cormorant Garamond — high-contrast elegant serif → wordmark
+     • Jost — geometric sans with wide tracking → arched caps / UI
+   Replace with the licensed brand fonts when available.
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Jost:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');

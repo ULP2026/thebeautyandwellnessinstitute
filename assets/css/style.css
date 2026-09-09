@@ -1,11 +1,12 @@
 /* ==========================================================================
    TBWI — design tokens, webfonts, and base element styles.
 
-   Ported from the design canvas (design/TBWI-Home-standalone.html). Token
+   Ported from the design canvas (design/canvas/TBWI-Website-v2.dc.html), whose
+   own token files sit in design/canvas/_ds/tokens/ for comparison. Token
    names and values match the canvas so the two stay comparable; if you change
    a colour here, change it there too.
 
-   NOTE ON FONTS: the canvas notes that the brand's licensed fonts were never
+   NOTE ON FONTS: the canvas states that the brand's licensed fonts were never
    supplied, so Cormorant Garamond and Jost are close Google Fonts matches to
    the logo lockup. Swap both families here when the real fonts arrive — every
    other file goes through --font-display / --font-body.
@@ -134,7 +135,7 @@
   --surface-card:    var(--white);
   --surface-raised:  var(--paper);
   --surface-sunken:  var(--greige-100);
-  --surface-inverse: var(--teal-900);
+  --surface-inverse: var(--teal-700);
 
   --text-heading:    var(--ink-900);
   --text-body:       var(--ink-700);

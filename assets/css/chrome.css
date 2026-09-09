@@ -37,9 +37,9 @@
 }
 .site-header.is-stuck .site-header__inner { padding-block: 14px; }
 
-.site-header__logo { flex-shrink: 0; display: flex; align-items: center; }
+.site-header__logo { flex-shrink: 0; display: flex; align-items: center; position: relative; }
 
-/* The lockup is a square 1500x1500 PNG — arched wordmark, botanical mark, and
+/* Both lockups are square 1500x1500 PNGs — arched wordmark, botanical mark and
    "Dr. Pamela Chapman" — so height and width track together. The canvas uses
    64px; the PNG's wide internal margins leave it small at that size, so this
    runs a little larger. */
@@ -48,13 +48,16 @@
   width: 76px;
   transition: height var(--dur-base) var(--ease-standard),
               width var(--dur-base) var(--ease-standard),
-              filter var(--dur-base) var(--ease-standard);
+              opacity var(--dur-base) var(--ease-standard);
 }
 .site-header.is-stuck .site-header__logo img { height: 56px; width: 56px; }
 
-/* Cream artwork reads on the dark hero but vanishes against the pale stuck
-   header, so darken it to a warm charcoal there. */
-.site-header.is-stuck .site-header__logo img { filter: brightness(0.32) saturate(1.5); }
+/* The cream lockup reads over the dark hero; the full-colour primary one takes
+   over when the header goes pale. Cross-fading the two real assets beats
+   filtering the cream one into a fake dark version. */
+.site-header__logo-primary { position: absolute; inset: 0; opacity: 0; }
+.site-header.is-stuck .site-header__logo-cream { opacity: 0; }
+.site-header.is-stuck .site-header__logo-primary { opacity: 1; }
 
 /* --- Desktop nav -------------------------------------------------------- */
 
