@@ -1,60 +1,61 @@
 /* ==========================================================================
    TBWI — home page behaviour.
 
-   Everything here is progressive enhancement. The page is readable and
-   complete with this file absent: index.html carries a `no-js` class that
-   this script removes on load, and the CSS uses `.no-js` to fall back to
-   plain stacked layouts for the two scroll-driven sections.
-
-   Anyone who prefers reduced motion gets the same static fallbacks, applied
-   here as .services--static / .process--static.
+   Progressive enhancement throughout. index.html carries a `no-js` class that
+   this script removes; the CSS uses `.no-js` to fall back to plain stacked
+   layouts for the two scroll-driven sections. Anyone who prefers reduced
+   motion, or is under 900px, gets those same fallbacks, applied here as
+   .services--static / .process--static.
    ========================================================================== */
 
 (function () {
   'use strict';
 
-  var root = document.documentElement;
-  root.classList.remove('no-js');
+  document.documentElement.classList.remove('no-js');
 
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   var narrow = window.matchMedia('(max-width: 900px)');
 
-  function prefersStatic() {
-    return reduceMotion.matches || narrow.matches;
-  }
+  function prefersStatic() { return reduceMotion.matches || narrow.matches; }
 
-  /* --- Header: solid once the hero is behind us ------------------------ */
+  // One rAF-throttled scroll pass drives everything below.
+  var handlers = [];
+  var ticking = false;
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function () {
+      ticking = false;
+      for (var i = 0; i < handlers.length; i++) handlers[i]();
+    });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  /* --- Header ---------------------------------------------------------- */
 
   var header = document.querySelector('.site-header');
   if (header) {
-    var onScrollHeader = function () {
+    handlers.push(function () {
       header.classList.toggle('is-stuck', window.scrollY > 40);
-    };
-    onScrollHeader();
-    window.addEventListener('scroll', onScrollHeader, { passive: true });
+    });
   }
 
   /* --- Mobile nav ------------------------------------------------------ */
 
   var toggle = document.querySelector('.nav-toggle');
   var mobileNav = document.querySelector('.mobile-nav');
-
   if (toggle && mobileNav) {
     var setNav = function (open) {
       toggle.setAttribute('aria-expanded', String(open));
       mobileNav.hidden = !open;
       document.body.classList.toggle('nav-open', open);
     };
-
     toggle.addEventListener('click', function () {
       setNav(toggle.getAttribute('aria-expanded') !== 'true');
     });
-
-    // Any link inside closes it, since every link is an in-page anchor.
     mobileNav.addEventListener('click', function (e) {
       if (e.target.closest('a')) setNav(false);
     });
-
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
         setNav(false);
@@ -63,7 +64,7 @@
     });
   }
 
-  /* --- Scroll reveal --------------------------------------------------- */
+  /* --- Scroll reveal ---------------------------------------------------- */
 
   var revealables = document.querySelectorAll('.reveal');
   if (revealables.length && 'IntersectionObserver' in window) {
@@ -73,101 +74,89 @@
         entry.target.classList.add('is-visible');
         revealObserver.unobserve(entry.target);
       });
-    }, { rootMargin: '0px 0px -12% 0px', threshold: 0.1 });
-
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.08 });
     revealables.forEach(function (el) { revealObserver.observe(el); });
   } else {
     revealables.forEach(function (el) { el.classList.add('is-visible'); });
   }
 
-  /* --- The Institute: word-by-word statement --------------------------- */
+  /* --- The Institute: word-by-word statement ---------------------------- */
 
   var statement = document.querySelector('.institute__statement');
-  if (statement && 'IntersectionObserver' in window) {
+  if (statement) {
     var words = statement.querySelectorAll('.word');
-
-    if (prefersStatic()) {
+    if (prefersStatic() || !('IntersectionObserver' in window)) {
       words.forEach(function (w) { w.classList.add('is-lit'); });
     } else {
       var wordObserver = new IntersectionObserver(function (entries) {
         entries.forEach(function (entry) {
           if (!entry.isIntersecting) return;
           words.forEach(function (w, i) {
-            setTimeout(function () { w.classList.add('is-lit'); }, i * 45);
+            setTimeout(function () { w.classList.add('is-lit'); }, i * 55);
           });
           wordObserver.disconnect();
         });
-      }, { threshold: 0.35 });
+      }, { threshold: 0.3 });
       wordObserver.observe(statement);
     }
   }
 
-  /* --- Hero parallax --------------------------------------------------- */
+  /* --- Hero: background parallax and drifting chips --------------------- */
 
   var heroBg = document.querySelector('.hero__bg');
-  if (heroBg && !reduceMotion.matches) {
-    var heroTicking = false;
-    var moveHero = function () {
+  var chips = document.querySelectorAll('.chip');
+  if ((heroBg || chips.length) && !reduceMotion.matches) {
+    handlers.push(function () {
       var y = window.scrollY;
-      if (y < window.innerHeight * 1.2) {
-        heroBg.style.transform = 'translate3d(0,' + (y * 0.18).toFixed(1) + 'px,0)';
-      }
-      heroTicking = false;
-    };
-    window.addEventListener('scroll', function () {
-      if (heroTicking) return;
-      heroTicking = true;
-      requestAnimationFrame(moveHero);
-    }, { passive: true });
+      if (y > window.innerHeight * 1.2) return;
+      if (heroBg) heroBg.style.transform = 'translate3d(0,' + (y * 0.18).toFixed(1) + 'px,0)';
+      // Each chip drifts at its own rate, so they separate as the page moves.
+      chips.forEach(function (chip) {
+        var speed = parseFloat(chip.getAttribute('data-speed')) || 0.1;
+        chip.style.transform = 'translate3d(0,' + (-y * speed).toFixed(1) + 'px,0)';
+      });
+    });
   }
 
-  /* --- Services: horizontal rail driven by vertical scroll ------------- */
+  /* --- Services: horizontal rail driven by vertical scroll -------------- */
 
   var services = document.querySelector('.services');
   if (services) {
     var scroller = services.querySelector('.services__scroll');
     var track = services.querySelector('.services__track');
-    var current = services.querySelector('.services__counter strong');
+    var bar = services.querySelector('.services__bar span');
+    var count = services.querySelector('[data-svc-count]');
     var cards = track ? track.querySelectorAll('.service-card') : [];
 
-    var railTicking = false;
-
     var updateRail = function () {
-      railTicking = false;
       if (prefersStatic() || !track || !scroller) return;
-
-      var rect = scroller.getBoundingClientRect();
       var distance = scroller.offsetHeight - window.innerHeight;
       if (distance <= 0) return;
 
-      // 0 at the moment the section pins, 1 when it releases.
-      var progress = Math.min(Math.max(-rect.top / distance, 0), 1);
+      // 0 when the section pins, 1 when it releases.
+      var progress = Math.min(Math.max(-scroller.getBoundingClientRect().top / distance, 0), 1);
 
-      // Slide the track just far enough that the last card ends flush right.
+      // Slide the track just far enough that the last card ends flush.
       var overflow = track.scrollWidth - track.clientWidth;
       track.style.transform = 'translate3d(' + (-overflow * progress).toFixed(1) + 'px,0,0)';
 
-      if (current && cards.length) {
+      if (bar) bar.style.width = (progress * 100).toFixed(1) + '%';
+      if (count && cards.length) {
         var index = Math.min(Math.round(progress * (cards.length - 1)) + 1, cards.length);
-        current.textContent = String(index).padStart(2, '0');
+        count.textContent = String(index).padStart(2, '0');
       }
     };
 
-    var onRailScroll = function () {
-      if (railTicking) return;
-      railTicking = true;
-      requestAnimationFrame(updateRail);
-    };
-
-    var syncRailMode = function () {
-      services.classList.toggle('services--static', prefersStatic());
-      if (prefersStatic() && track) track.style.transform = '';
+    var syncRail = function () {
+      var isStatic = prefersStatic();
+      services.classList.toggle('services--static', isStatic);
+      if (isStatic && track) track.style.transform = '';
       else updateRail();
     };
 
-    syncRailMode();
-    window.addEventListener('scroll', onRailScroll, { passive: true });
-    window.addEventListener('resize', syncRailMode);
+    handlers.push(updateRail);
+    window.addEventListener('resize', syncRail);
+    syncRail();
   }
 
   /* --- How we work: pinned step sequence -------------------------------- */
@@ -176,47 +165,33 @@
   if (process) {
     var procScroller = process.querySelector('.process__scroll');
     var steps = process.querySelectorAll('.process__step');
-    var dots = process.querySelectorAll('.process__dot');
-    var procTicking = false;
+    var medias = process.querySelectorAll('.process__media');
+    var procCount = process.querySelector('[data-process-count]');
 
     var setStep = function (index) {
       steps.forEach(function (s, i) { s.classList.toggle('is-active', i === index); });
-      dots.forEach(function (d, i) { d.classList.toggle('is-active', i === index); });
+      medias.forEach(function (m, i) { m.classList.toggle('is-active', i === index); });
+      if (procCount) procCount.textContent = String(index + 1);
     };
 
     var updateProcess = function () {
-      procTicking = false;
       if (prefersStatic() || !procScroller || !steps.length) return;
-
-      var rect = procScroller.getBoundingClientRect();
       var distance = procScroller.offsetHeight - window.innerHeight;
       if (distance <= 0) return;
-
-      var progress = Math.min(Math.max(-rect.top / distance, 0), 1);
-      // Nudge just shy of the end so the final step holds while the section releases.
-      var index = Math.min(Math.floor(progress * steps.length), steps.length - 1);
-      setStep(index);
+      var progress = Math.min(Math.max(-procScroller.getBoundingClientRect().top / distance, 0), 1);
+      setStep(Math.min(Math.floor(progress * steps.length), steps.length - 1));
     };
 
-    var onProcScroll = function () {
-      if (procTicking) return;
-      procTicking = true;
-      requestAnimationFrame(updateProcess);
-    };
-
-    var syncProcessMode = function () {
+    var syncProcess = function () {
       var isStatic = prefersStatic();
       process.classList.toggle('process--static', isStatic);
-      if (isStatic) {
-        steps.forEach(function (s) { s.classList.remove('is-active'); });
-      } else {
-        updateProcess();
-      }
+      if (isStatic) steps.forEach(function (s) { s.classList.add('is-active'); });
+      else updateProcess();
     };
 
-    syncProcessMode();
-    window.addEventListener('scroll', onProcScroll, { passive: true });
-    window.addEventListener('resize', syncProcessMode);
+    handlers.push(updateProcess);
+    window.addEventListener('resize', syncProcess);
+    syncProcess();
   }
 
   /* --- FAQ accordion ---------------------------------------------------- */
@@ -225,8 +200,6 @@
   faqButtons.forEach(function (btn) {
     var panel = document.getElementById(btn.getAttribute('aria-controls'));
     if (!panel) return;
-
-    // Collapsed to start; CSS animates the explicit height we set here.
     panel.style.height = '0px';
 
     btn.addEventListener('click', function () {
@@ -245,7 +218,6 @@
     });
   });
 
-  // Keep an open answer the right height when the text reflows.
   window.addEventListener('resize', function () {
     faqButtons.forEach(function (btn) {
       if (btn.getAttribute('aria-expanded') !== 'true') return;
@@ -254,9 +226,13 @@
     });
   });
 
-  /* --- Marquees: duplicate the track so the loop is seamless ----------- */
+  /* --- Marquees: duplicate each group so the -50% loop is seamless ------ */
 
   document.querySelectorAll('.marquee__track').forEach(function (track) {
-    track.innerHTML += track.innerHTML;
+    var group = track.querySelector('.marquee__group');
+    if (group) track.appendChild(group.cloneNode(true));
   });
+
+  // Prime everything at the current scroll position.
+  onScroll();
 })();

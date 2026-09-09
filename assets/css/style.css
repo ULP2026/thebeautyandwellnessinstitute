@@ -223,9 +223,9 @@
   --dur-base: 220ms;
   --dur-slow: 360ms;
 
-  --container-max: 1200px;
+  --container-max: 1240px;
   --container-prose: 680px;
-  --gutter: clamp(1.25rem, 5vw, 2.5rem);
+  --gutter: clamp(1.25rem, 5vw, 40px);
   --header-h: 76px;
 }
 
@@ -337,14 +337,15 @@ ul { margin: 0; padding: 0; list-style: none; }
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
-  padding: 0.9rem 1.9rem;
+  padding: 0.82rem 1.9rem;
   border: 1px solid transparent;
   border-radius: var(--radius-pill);
   font-family: var(--font-body);
-  font-size: var(--fs-sm);
+  font-size: 0.9rem;
   font-weight: var(--fw-medium);
-  letter-spacing: var(--tracking-wide);
+  letter-spacing: 0.14em;
   text-transform: uppercase;
+  white-space: nowrap;
   cursor: pointer;
   transition: background var(--dur-base) var(--ease-standard),
               color var(--dur-base) var(--ease-standard),
@@ -353,26 +354,25 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 .btn:hover { text-decoration: none; transform: translateY(-1px); }
 .btn:active { transform: translateY(0); }
+.btn--sm { padding: 0.6rem 1.3rem; font-size: 0.8rem; }
 
 .btn--primary { background: var(--brand); color: var(--text-on-brand); }
 .btn--primary:hover { background: var(--brand-strong); }
 
-.btn--ghost {
-  background: transparent;
-  color: var(--text-heading);
-  border-color: var(--border-strong);
-}
+.btn--gold { background: var(--gold-500); color: #2C322B; }
+.btn--gold:hover { background: var(--gold-700); color: #fff; }
+
+.btn--ghost { background: transparent; color: var(--text-heading); border-color: var(--border-strong); }
 .btn--ghost:hover { border-color: var(--brand); color: var(--brand-strong); }
 
+/* Glass pill for use over the hero video. */
 .btn--on-dark {
-  background: transparent;
+  background: rgba(44, 50, 43, 0.2);
+  backdrop-filter: blur(6px);
   color: #F5F2EA;
-  border-color: rgba(245, 242, 234, 0.4);
+  border-color: rgba(247, 244, 237, 0.34);
 }
-.btn--on-dark:hover {
-  background: rgba(245, 242, 234, 0.1);
-  border-color: rgba(245, 242, 234, 0.75);
-}
+.btn--on-dark:hover { background: rgba(247, 244, 237, 0.16); border-color: rgba(247, 244, 237, 0.6); }
 
 /* Screen-reader-only, for the skip link and icon-button labels. */
 .sr-only {

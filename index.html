@@ -18,7 +18,6 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/img/logo.png">
 
-<!-- The two font families the page actually renders above the fold. -->
 <link rel="preload" href="/assets/fonts/cormorant-garamond-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/jost-latin.woff2" as="font" type="font/woff2" crossorigin>
 
@@ -71,8 +70,10 @@
   <symbol id="i-user-round" viewBox="0 0 24 24"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></symbol>
   <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M11 20a10 10 0 0010-10 25.9 25.9 0 00-1.04-7.281 1 1 0 00-1.755-.325C15.833 5.5 13 5.5 9.8 6.1A7 7 0 0011 20"/><path d="M2 21a5 5 0 012.911-4.544C7.613 15.212 8.351 15.24 11 13"/></symbol>
   <symbol id="i-dna" viewBox="0 0 24 24"><path d="m10 16 1.5 1.5"/><path d="m14 8-1.5-1.5"/><path d="M15 2c-1.798 1.998-2.518 3.995-2.807 5.993"/><path d="m16.5 10.5 1 1"/><path d="m17 6-2.891-2.891"/><path d="M2 15c6.667-6 13.333 0 20-6"/><path d="m20 9 .891.891"/><path d="M3.109 14.109 4 15"/><path d="m6.5 12.5 1 1"/><path d="m7 18 2.891 2.891"/><path d="M9 22c1.798-1.998 2.518-3.995 2.807-5.993"/></symbol>
+  <symbol id="i-flower-2" viewBox="0 0 24 24"><path d="M12 5a3 3 0 1 1 3 3m-3-3a3 3 0 1 0-3 3m3-3v1M9 8a3 3 0 1 0 3 3M9 8h1m5 0a3 3 0 1 1-3 3m3-3h-1m-2 3v-1"/><circle cx="12" cy="8" r="2"/><path d="M12 10v12"/><path d="M12 22c4.2 0 7-1.667 7-5-4.2 0-7 1.667-7 5Z"/><path d="M12 22c-4.2 0-7-1.667-7-5 4.2 0 7 1.667 7 5Z"/></symbol>
   <symbol id="i-route" viewBox="0 0 24 24"><circle cx="6" cy="19" r="3"/><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/><circle cx="18" cy="5" r="3"/></symbol>
   <symbol id="i-map-pin" viewBox="0 0 24 24"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></symbol>
+  <symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></symbol>
 </svg>
 
 
@@ -82,6 +83,9 @@
       <img src="/assets/img/logo.png" alt="The Beauty and Wellness Institute" width="1500" height="1500">
     </a>
 
+    <!-- The canvas nav also carries a Reviews link. The testimonial section it
+         points at is not built (its quotes are placeholder copy), so the link
+         is left out rather than pointed at nothing. Restore both together. -->
     <nav class="nav" aria-label="Primary">
       <div class="nav__dd">
         <a class="nav__link" href="#services">
@@ -96,7 +100,7 @@
             <a class="nav__dd-item" href="#services"><span class="nav__dd-icon"><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-leaf"/></svg></span>Functional Medicine</a>
             <a class="nav__dd-item" href="#services"><span class="nav__dd-icon"><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-droplet"/></svg></span>IV Therapy</a>
             <a class="nav__dd-item" href="#services"><span class="nav__dd-icon"><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-syringe"/></svg></span>Injectables &amp; Aesthetics</a>
-            <a class="nav__dd-item" href="#services"><span class="nav__dd-icon"><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-leaf"/></svg></span>The Day Spa</a>
+            <a class="nav__dd-item" href="#services"><span class="nav__dd-icon"><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-flower-2"/></svg></span>The Day Spa</a>
             <a class="nav__dd-item" href="#services"><span class="nav__dd-icon"><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-user-round"/></svg></span>High Performance Coaching</a>
           </div>
         </div>
@@ -106,7 +110,7 @@
       <a class="nav__link" href="#areas">Areas We Serve</a>
       <a class="nav__link" href="#blog">Blog</a>
       <a class="nav__phone" href="tel:9415547546">941-554-7546</a>
-      <a class="btn btn--on-dark" href="#book">Book a Consultation</a>
+      <a class="btn btn--primary" href="#book">Book a Consultation</a>
     </nav>
 
     <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav">
@@ -142,25 +146,38 @@
     <div class="hero__scrim"></div>
   </div>
 
-  <div class="hero__inner container">
-    <h1 class="display display--1 display--on-dark hero__title">
-      Look and feel your best, <em>from the inside out.</em>
+  <div class="hero__inner">
+    <h1 class="hero__title">
+      <span>Look and feel your best,</span>
+      <span><em>from the inside out.</em></span>
     </h1>
-    <p class="lead lead--on-dark hero__lead">
+    <p class="hero__lead">
       Functional medicine, medical weight loss, IV therapy, injectables, and a day spa,
       all led by Dr. Pamela Chapman in Bradenton, Florida.
     </p>
     <div class="hero__actions">
-      <a class="btn btn--primary" href="#services">Our services</a>
-      <a class="btn btn--on-dark" href="#book">Book a consultation</a>
+      <a class="btn btn--on-dark" href="#services">Our services</a>
+      <a class="btn btn--primary" href="#book">Book a consultation</a>
     </div>
-    <div class="hero__chips">
-      <a href="#services">Medical Weight Loss</a>
-      <a href="#services">Hormone Replacement</a>
-      <a href="#services">Injectables &amp; Aesthetics</a>
-      <a href="#services">Peptide Therapy</a>
-      <a href="#services">Functional Medicine</a>
-    </div>
+  </div>
+
+  <!-- Service pills drifting over the video; data-speed drives the parallax. -->
+  <div class="hero__chips" aria-hidden="true">
+    <div class="chip chip--1" data-speed="0.10"><div class="chip__inner">
+      <span class="chip__icon"><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-heart-pulse"/></svg></span>
+      <span class="chip__label">Medical Weight Loss</span></div></div>
+    <div class="chip chip--2" data-speed="0.16"><div class="chip__inner">
+      <span class="chip__icon"><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-activity"/></svg></span>
+      <span class="chip__label">Hormone Replacement</span></div></div>
+    <div class="chip chip--3" data-speed="0.22"><div class="chip__inner">
+      <span class="chip__icon"><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-syringe"/></svg></span>
+      <span class="chip__label">Injectables &amp; Aesthetics</span></div></div>
+    <div class="chip chip--4" data-speed="0.13"><div class="chip__inner">
+      <span class="chip__icon"><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-dna"/></svg></span>
+      <span class="chip__label">Peptide Therapy</span></div></div>
+    <div class="chip chip--5" data-speed="0.19"><div class="chip__inner">
+      <span class="chip__icon"><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-flower-2"/></svg></span>
+      <span class="chip__label">Functional Medicine</span></div></div>
   </div>
 </section>
 
@@ -168,43 +185,53 @@
 <!-- ===== The Institute ================================================= -->
 <section class="institute">
   <div class="container">
-    <p class="eyebrow eyebrow--on-dark">The Institute</p>
-
-    <h2 class="institute__statement">
-      <span class="word">Whole-person</span> <span class="word">care</span>
-      <span class="word">in</span> <span class="word">Bradenton,</span>
-      <span class="word">where</span> <span class="word">Dr.</span>
-      <span class="word">Chapman</span> <span class="word">helps</span>
-      <span class="word">patients</span> <span class="word">look</span>
-      <span class="word">and</span> <span class="word">feel</span>
-      <span class="word">their</span> <span class="word">best,</span>
-      <span class="word">from</span> <span class="word">the</span>
-      <span class="word">inside</span> <span class="word">out.</span>
-    </h2>
-
-    <p class="institute__body">
-      From functional medicine to injectables, we pair medical expertise with an
-      unhurried, personal approach. Every plan starts with listening and ends with
-      results you can feel.
-    </p>
-
-    <!-- The canvas also carried a "96% treatment satisfaction" figure here. It is
-         deliberately not built: a quantified outcomes claim needs a substantiated
-         source before it can be advertised. Add it back with that source, or leave
-         it out. Same reasoning removed the placeholder testimonial wall that sat
-         between "How we work" and "Areas we serve". -->
-    <div class="stats">
-      <div class="stat">
-        <div class="stat__value">15+</div>
-        <p class="stat__label">Years in medicine</p>
+    <div class="institute__grid">
+      <div class="institute__label">
+        <p class="eyebrow eyebrow--on-dark">The Institute</p>
       </div>
-      <div class="stat">
-        <div class="stat__value">8</div>
-        <p class="stat__label">Connected services under one roof</p>
+
+      <div>
+        <p class="institute__statement">
+          <span class="word">Whole-person </span><span class="word">care </span><span class="word">in </span><span class="word">Bradenton, </span><span class="word">where </span><span class="word">Dr. </span><span class="word">Chapman </span><span class="word">helps </span><span class="word">patients </span><span class="word">look </span><span class="word">and </span><span class="word">feel </span><span class="word">their </span><span class="word">best, </span><span class="word">from </span><span class="word">the </span><span class="word">inside </span><span class="word">out.</span>
+        </p>
+
+        <p class="institute__body">
+          From functional medicine to injectables, we pair medical expertise with an
+          unhurried, personal approach. Every plan starts with listening and ends with
+          results you can feel.
+        </p>
+
+        <div class="stats reveal">
+          <div>
+            <div class="stat__value">15+</div>
+            <p class="stat__label">Years in medicine</p>
+          </div>
+          <div class="stats__rule"></div>
+          <div>
+            <div class="stat__value">8</div>
+            <p class="stat__label">Connected services under one roof</p>
+          </div>
+          <div class="stats__rule"></div>
+          <div>
+            <div class="stat__value">1:1</div>
+            <p class="stat__label">Physician-led consultations</p>
+          </div>
+        </div>
       </div>
-      <div class="stat">
-        <div class="stat__value">1:1</div>
-        <p class="stat__label">Physician-led consultations</p>
+    </div>
+  </div>
+
+  <div class="institute__marquee" aria-hidden="true">
+    <div class="marquee__track">
+      <div class="marquee__group">
+        <div class="marquee__card"><svg fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-heart-pulse"/></svg><span>Medical Weight Loss</span></div>
+        <div class="marquee__card"><svg fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-activity"/></svg><span>Hormone Replacement Therapy</span></div>
+        <div class="marquee__card"><svg fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-dna"/></svg><span>Peptide Therapy</span></div>
+        <div class="marquee__card"><svg fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-leaf"/></svg><span>Functional Medicine</span></div>
+        <div class="marquee__card"><svg fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-droplet"/></svg><span>IV Therapy</span></div>
+        <div class="marquee__card"><svg fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-syringe"/></svg><span>Injectables &amp; Aesthetics</span></div>
+        <div class="marquee__card"><svg fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-flower-2"/></svg><span>The Day Spa</span></div>
+        <div class="marquee__card"><svg fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-user-round"/></svg><span>High Performance Coaching</span></div>
       </div>
     </div>
   </div>
@@ -217,38 +244,52 @@
     <div class="about__grid">
       <div class="reveal">
         <p class="eyebrow">About us</p>
-        <h2 class="display display--2 about__title">
-          Medical expertise, with a warm, <em>personal</em> touch.
-        </h2>
-      </div>
-      <div class="reveal">
+        <h2 class="section-title about__title">Medical expertise, with a warm, <em>personal</em> touch.</h2>
         <p class="about__body">
           The Beauty and Wellness Institute brings functional medicine, weight loss,
           IV therapy, aesthetics, and spa care under one roof in Bradenton.
           Dr. Pamela Chapman builds every plan around your goals, validated by labs
           and guided by experience.
         </p>
-        <a class="btn btn--ghost" href="#book">Meet Dr. Chapman</a>
+        <div class="about__cta">
+          <a class="btn btn--primary" href="#book">Meet Dr. Chapman</a>
+        </div>
       </div>
-    </div>
 
-    <div class="marquee" aria-hidden="true">
-      <div class="marquee__track">
-        <span class="marquee__item">Functional Medicine</span>
-        <span class="marquee__item">Weight Loss</span>
-        <span class="marquee__item">IV Therapy</span>
-        <span class="marquee__item">Aesthetics</span>
-        <span class="marquee__item">Day Spa</span>
-      </div>
-    </div>
-
-    <div class="marquee marquee--reverse" aria-hidden="true">
-      <div class="marquee__track">
-        <span class="marquee__item">Bradenton</span>
-        <span class="marquee__item">Sarasota</span>
-        <span class="marquee__item">Lakewood Ranch</span>
-        <span class="marquee__item">Venice</span>
-        <span class="marquee__item">Anna Maria</span>
+      <!-- The canvas builds this card around a "96% treatment satisfaction,
+           +2.4%" figure. That block is not built: a quantified outcomes claim
+           needs a substantiated source before it can be advertised. The card
+           and its marquees are otherwise as designed — drop the stat back in
+           above the marquees once there is a source. -->
+      <div class="outcomes reveal">
+        <div class="outcomes__head">
+          <div class="outcomes__title">One roof</div>
+          <p class="outcomes__sub">Eight connected services, one clinic</p>
+        </div>
+        <div class="outcomes__body">
+          <div class="pill-marquee" aria-hidden="true">
+            <div class="marquee__track">
+              <div class="marquee__group">
+                <span class="pill">Functional Medicine</span>
+                <span class="pill">Weight Loss</span>
+                <span class="pill">IV Therapy</span>
+                <span class="pill">Aesthetics</span>
+                <span class="pill">Day Spa</span>
+              </div>
+            </div>
+          </div>
+          <div class="pill-marquee pill-marquee--reverse" aria-hidden="true">
+            <div class="marquee__track">
+              <div class="marquee__group">
+                <span class="pill">Bradenton</span>
+                <span class="pill">Sarasota</span>
+                <span class="pill">Lakewood Ranch</span>
+                <span class="pill">Venice</span>
+                <span class="pill">Anna Maria</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -261,18 +302,15 @@
     <div class="services__sticky">
 
       <div class="services__head">
-        <p class="eyebrow">Services</p>
-        <div class="services__head-row">
-          <div>
-            <h2 class="display display--2 section-head__title">
-              Eight services, <em>one connected plan.</em>
-            </h2>
-            <p class="lead services__lead">
-              Weight loss, hormones, peptides, functional medicine, IV therapy,
-              injectables, spa care, and coaching, all physician-led.
-            </p>
-          </div>
-          <p class="services__counter"><strong>01</strong> / 08</p>
+        <p class="eyebrow eyebrow--center">Services</p>
+        <h2 class="section-title">Eight services, <em>one connected plan.</em></h2>
+        <p class="section-sub section-sub--center">
+          Weight loss, hormones, peptides, functional medicine, IV therapy,
+          injectables, spa care, and coaching, all physician-led.
+        </p>
+        <div class="services__progress">
+          <span class="services__bar"><span></span></span>
+          <span class="services__count"><span data-svc-count>01</span> / 08</span>
         </div>
       </div>
 
@@ -280,82 +318,106 @@
         <div class="services__track">
 
           <article class="service-card">
-            <div class="service-card__media"><img src="/assets/img/service-01-weight-loss.jpg" alt="" loading="lazy" width="900" height="502"></div>
+            <div class="service-card__media">
+              <img src="/assets/img/service-01-weight-loss.jpg" alt="" loading="lazy" width="900" height="502">
+              <span class="service-card__num">01</span>
+            </div>
             <div class="service-card__body">
-              <p class="service-card__num">01</p>
               <h3 class="service-card__title">Medical Weight Loss</h3>
               <p class="service-card__desc">Physician-supervised programs built around your body, your labs, and your goals.</p>
-              <a class="service-card__link" href="#book">Learn more</a>
+              <div class="service-card__spacer"></div>
+              <a class="service-card__link" href="#book">Learn more<svg fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
             </div>
           </article>
 
           <article class="service-card">
-            <div class="service-card__media"><img src="/assets/img/service-02-hormone-therapy.jpg" alt="" loading="lazy" width="900" height="502"></div>
+            <div class="service-card__media">
+              <img src="/assets/img/service-02-hormone-therapy.jpg" alt="" loading="lazy" width="900" height="502">
+              <span class="service-card__num">02</span>
+            </div>
             <div class="service-card__body">
-              <p class="service-card__num">02</p>
               <h3 class="service-card__title">Hormone Replacement Therapy</h3>
               <p class="service-card__desc">Balanced, lab-guided hormone care for energy, sleep, and mood.</p>
-              <a class="service-card__link" href="#book">Learn more</a>
+              <div class="service-card__spacer"></div>
+              <a class="service-card__link" href="#book">Learn more<svg fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
             </div>
           </article>
 
           <article class="service-card">
-            <div class="service-card__media"><img src="/assets/img/service-03-peptide-therapy.jpg" alt="" loading="lazy" width="900" height="502"></div>
+            <div class="service-card__media">
+              <img src="/assets/img/service-03-peptide-therapy.jpg" alt="" loading="lazy" width="900" height="502">
+              <span class="service-card__num">03</span>
+            </div>
             <div class="service-card__body">
-              <p class="service-card__num">03</p>
               <h3 class="service-card__title">Peptide Therapy</h3>
               <p class="service-card__desc">Targeted peptides for recovery, metabolism, and healthy aging.</p>
-              <a class="service-card__link" href="#book">Learn more</a>
+              <div class="service-card__spacer"></div>
+              <a class="service-card__link" href="#book">Learn more<svg fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
             </div>
           </article>
 
           <article class="service-card">
-            <div class="service-card__media"><img src="/assets/img/service-04-functional-medicine.jpg" alt="" loading="lazy" width="900" height="502"></div>
+            <div class="service-card__media">
+              <img src="/assets/img/service-04-functional-medicine.jpg" alt="" loading="lazy" width="900" height="502">
+              <span class="service-card__num">04</span>
+            </div>
             <div class="service-card__body">
-              <p class="service-card__num">04</p>
               <h3 class="service-card__title">Functional Medicine</h3>
               <p class="service-card__desc">Root-cause care that looks at labs, lifestyle, and hormones together.</p>
-              <a class="service-card__link" href="#book">Learn more</a>
+              <div class="service-card__spacer"></div>
+              <a class="service-card__link" href="#book">Learn more<svg fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
             </div>
           </article>
 
           <article class="service-card">
-            <div class="service-card__media"><img src="/assets/img/service-05-iv-therapy.jpg" alt="" loading="lazy" width="900" height="502"></div>
+            <div class="service-card__media">
+              <img src="/assets/img/service-05-iv-therapy.jpg" alt="" loading="lazy" width="900" height="502">
+              <span class="service-card__num">05</span>
+            </div>
             <div class="service-card__body">
-              <p class="service-card__num">05</p>
               <h3 class="service-card__title">IV Therapy</h3>
               <p class="service-card__desc">Hydration, vitamins, and recovery blends delivered in a calm setting.</p>
-              <a class="service-card__link" href="#book">Learn more</a>
+              <div class="service-card__spacer"></div>
+              <a class="service-card__link" href="#book">Learn more<svg fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
             </div>
           </article>
 
           <article class="service-card">
-            <div class="service-card__media"><img src="/assets/img/service-06-injectables.jpg" alt="" loading="lazy" width="900" height="502"></div>
+            <div class="service-card__media">
+              <img src="/assets/img/service-06-injectables.jpg" alt="" loading="lazy" width="900" height="502">
+              <span class="service-card__num">06</span>
+            </div>
             <div class="service-card__body">
-              <p class="service-card__num">06</p>
               <h3 class="service-card__title">Injectables &amp; Aesthetics</h3>
               <p class="service-card__desc">Botox, fillers, and Sculptra for subtle, natural-looking results.</p>
-              <a class="service-card__link" href="#book">Learn more</a>
+              <div class="service-card__spacer"></div>
+              <a class="service-card__link" href="#book">Learn more<svg fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
             </div>
           </article>
 
           <article class="service-card">
-            <div class="service-card__media"><img src="/assets/img/service-07-day-spa.jpg" alt="" loading="lazy" width="900" height="502"></div>
+            <div class="service-card__media">
+              <img src="/assets/img/service-07-day-spa.jpg" alt="" loading="lazy" width="900" height="502">
+              <span class="service-card__num">07</span>
+            </div>
             <div class="service-card__body">
-              <p class="service-card__num">07</p>
               <h3 class="service-card__title">The Day Spa</h3>
               <p class="service-card__desc">Facials, body treatments, and unhurried time to restore.</p>
-              <a class="service-card__link" href="#book">Learn more</a>
+              <div class="service-card__spacer"></div>
+              <a class="service-card__link" href="#book">Learn more<svg fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
             </div>
           </article>
 
           <article class="service-card">
-            <div class="service-card__media"><img src="/assets/img/service-08-coaching.jpg" alt="" loading="lazy" width="900" height="502"></div>
+            <div class="service-card__media">
+              <img src="/assets/img/service-08-coaching.jpg" alt="" loading="lazy" width="900" height="502">
+              <span class="service-card__num">08</span>
+            </div>
             <div class="service-card__body">
-              <p class="service-card__num">08 <span class="service-card__tag">Coming soon</span></p>
-              <h3 class="service-card__title">High Performance Coaching</h3>
+              <h3 class="service-card__title">High Performance Coaching <span class="service-card__tag">Coming soon</span></h3>
               <p class="service-card__desc">One-on-one coaching for energy, focus, and longevity.</p>
-              <a class="service-card__link" href="#book">Learn more</a>
+              <div class="service-card__spacer"></div>
+              <a class="service-card__link" href="#book">Learn more<svg fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
             </div>
           </article>
 
@@ -372,68 +434,68 @@
   <div class="process__scroll">
     <div class="process__sticky">
 
-      <div class="process__head">
-        <div class="container">
-          <p class="eyebrow eyebrow--on-dark">How we work</p>
-        </div>
-      </div>
+      <div class="process__text">
+        <p class="eyebrow eyebrow--on-dark">How we work</p>
 
-      <div class="process__dots" aria-hidden="true">
-        <span class="process__dot is-active"></span>
-        <span class="process__dot"></span>
-        <span class="process__dot"></span>
-        <span class="process__dot"></span>
-        <span class="process__dot"></span>
-      </div>
-
-      <div class="process__steps">
-
-        <div class="process__step is-active">
-          <div>
-            <div class="process__num">01</div>
-            <h3>Initial Consultation</h3>
+        <div class="process__steps">
+          <div class="process__step is-active">
+            <h3>Initial<br>Consultation</h3>
             <p>A one-on-one visit with Dr. Chapman in Bradenton to understand your goals, history, and baseline.</p>
           </div>
-          <div class="process__media"><img src="/assets/img/process-1-consultation.jpg" alt="" loading="lazy" width="1100" height="1473"></div>
-        </div>
-
-        <div class="process__step">
-          <div>
-            <div class="process__num">02</div>
-            <h3>Labs &amp; Assessment</h3>
+          <div class="process__step">
+            <h3>Labs &amp;<br>Assessment</h3>
             <p>Comprehensive lab work and aesthetic assessment, so we see the full picture.</p>
           </div>
-          <div class="process__media"><img src="/assets/img/process-2-labs.jpg" alt="" loading="lazy" width="1100" height="1473"></div>
-        </div>
-
-        <div class="process__step">
-          <div>
-            <div class="process__num">03</div>
-            <h3>Your Personal Plan</h3>
+          <div class="process__step">
+            <h3>Your Personal<br>Plan</h3>
             <p>A clear roadmap across functional medicine, weight loss, aesthetics, and spa care. No guesswork.</p>
           </div>
-          <div class="process__media"><img src="/assets/img/process-3-plan.jpg" alt="" loading="lazy" width="1100" height="1473"></div>
-        </div>
-
-        <div class="process__step">
-          <div>
-            <div class="process__num">04</div>
-            <h3>Treatment &amp; Care</h3>
+          <div class="process__step">
+            <h3>Treatment<br>&amp; Care</h3>
             <p>Unhurried, physician-administered appointments, always at your pace.</p>
           </div>
-          <div class="process__media"><img src="/assets/img/process-4-treatment.jpg" alt="" loading="lazy" width="1100" height="1473"></div>
-        </div>
-
-        <div class="process__step">
-          <div>
-            <div class="process__num">05</div>
-            <h3>Review &amp; Refine</h3>
+          <div class="process__step">
+            <h3>Review &amp;<br>Refine</h3>
             <p>We track your results and refine the plan together, season by season.</p>
           </div>
-          <div class="process__media"><img src="/assets/img/process-5-review.jpg" alt="" loading="lazy" width="1100" height="1473"></div>
+        </div>
+      </div>
+
+      <div class="process__media-stack">
+        <div class="process__media process__media--1 is-active">
+          <div class="process__wash"></div>
+          <img src="/assets/img/process-1-consultation.jpg" alt="" loading="lazy" width="1100" height="1473">
+          <div class="process__glyph"><i class="glyph-rings-outer"><i class="glyph-rings-inner"></i></i></div>
+        </div>
+        <div class="process__media process__media--2">
+          <div class="process__wash"></div>
+          <img src="/assets/img/process-2-labs.jpg" alt="" loading="lazy" width="1100" height="1473">
+          <div class="process__glyph"><i class="glyph-diamond"><i></i></i></div>
+        </div>
+        <div class="process__media process__media--3">
+          <div class="process__wash"></div>
+          <img src="/assets/img/process-3-plan.jpg" alt="" loading="lazy" width="1100" height="1473">
+          <div class="process__glyph process__glyph--pills"><i class="glyph-pill"></i><i class="glyph-pill glyph-pill--2"></i></div>
+        </div>
+        <div class="process__media process__media--4">
+          <div class="process__wash"></div>
+          <img src="/assets/img/process-4-treatment.jpg" alt="" loading="lazy" width="1100" height="1473">
+          <div class="process__glyph"><i class="glyph-oval"></i></div>
+        </div>
+        <div class="process__media process__media--5">
+          <div class="process__wash"></div>
+          <img src="/assets/img/process-5-review.jpg" alt="" loading="lazy" width="1100" height="1473">
+          <div class="process__glyph">
+            <i class="glyph-target glyph-target--1"></i>
+            <i class="glyph-target glyph-target--2"></i>
+            <i class="glyph-target glyph-target--3"></i>
+            <i class="glyph-target glyph-target--4"></i>
+          </div>
         </div>
 
+        <div class="process__counter" aria-hidden="true"><span data-process-count>1</span><span> / 5</span></div>
       </div>
+
     </div>
   </div>
 </section>
@@ -442,48 +504,45 @@
 <!-- ===== Areas we serve ================================================ -->
 <section class="areas" id="areas">
   <div class="container">
-    <p class="eyebrow eyebrow--on-dark">Areas We Serve</p>
-    <h2 class="display display--2 display--on-dark section-head__title section-head__title--on-dark">
-      Serving Bradenton and the <em>Gulf Coast</em>
-    </h2>
-    <p class="lead lead--on-dark" style="max-width:56ch">
-      Our clinic is on Manatee Avenue in Bradenton, and patients visit from across
-      Manatee and Sarasota counties.
-    </p>
+    <div class="reveal">
+      <p class="eyebrow eyebrow--on-dark">Areas We Serve</p>
+      <h2 class="section-title section-title--on-dark">Serving Bradenton and the Gulf Coast</h2>
+      <p class="section-sub section-sub--on-dark">
+        Our clinic is on Manatee Avenue in Bradenton, and patients visit from across
+        Manatee and Sarasota counties.
+      </p>
+    </div>
 
     <div class="areas__grid">
       <div class="areas__card reveal">
-        <h3>Our clinic</h3>
-        <ul class="areas__meta">
-          <li>
-            <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-map-pin"/></svg>
-            <span>6114 Manatee Ave W, Bradenton, FL 34209</span>
-          </li>
-          <li>
-            <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-circle-check"/></svg>
-            <span>Med spa and functional medicine in one location</span>
-          </li>
-          <li>
-            <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-circle-check"/></svg>
-            <span>Easy parking, by appointment</span>
-          </li>
+        <span class="areas__icon"><svg fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-map-pin"/></svg></span>
+        <p class="eyebrow">Our clinic</p>
+        <h3>Bradenton, Florida</h3>
+        <ul class="areas__list">
+          <li><svg fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-circle-check"/></svg>6114 Manatee Ave W, Bradenton, FL 34209</li>
+          <li><svg fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-circle-check"/></svg>Med spa and functional medicine in one location</li>
+          <li><svg fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-circle-check"/></svg>Easy parking, by appointment</li>
         </ul>
-        <div class="areas__actions">
-          <a class="btn btn--on-dark" href="tel:9415547546">941-554-7546</a>
-          <a class="btn btn--primary" href="#book">Book a Consultation</a>
+        <div class="areas__spacer"></div>
+        <div class="areas__foot">
+          <a class="areas__phone" href="tel:9415547546">941-554-7546</a>
+          <a class="btn btn--primary btn--sm" href="#book">Book a Consultation</a>
         </div>
       </div>
 
       <div class="areas__card reveal">
-        <h3>Nearby communities</h3>
+        <span class="areas__icon areas__icon--gold"><svg fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-route"/></svg></span>
+        <p class="eyebrow eyebrow--gold">Nearby communities</p>
+        <h3>A short drive from across the Gulf Coast</h3>
         <ul class="areas__list">
-          <li>Sarasota and Lakewood Ranch</li>
-          <li>Venice and Parrish</li>
-          <li>Anna Maria Island and Longboat Key</li>
+          <li><svg fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-circle-check"/></svg>Sarasota and Lakewood Ranch</li>
+          <li><svg fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-circle-check"/></svg>Venice and Parrish</li>
+          <li><svg fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-circle-check"/></svg>Anna Maria Island and Longboat Key</li>
         </ul>
-        <p class="areas__note">
-          Also serving North Port, Palmetto, Ellenton, Holmes Beach, and Cortez.
-        </p>
+        <div class="areas__spacer"></div>
+        <div class="areas__foot">
+          <span class="areas__note">Also serving North Port, Palmetto, Ellenton, Holmes Beach, and Cortez</span>
+        </div>
       </div>
     </div>
 
@@ -494,74 +553,70 @@
 
 <!-- ===== FAQ =========================================================== -->
 <section class="faq" id="faq">
-  <div class="container">
-    <div class="faq__grid">
-      <div>
-        <p class="eyebrow">FAQ</p>
-        <h2 class="display display--3 section-head__title">Frequently asked questions</h2>
-        <p>Everything you need to know before your first visit, from booking to results.</p>
+  <div class="faq__head reveal">
+    <p class="eyebrow eyebrow--center">FAQ</p>
+    <h2 class="section-title">Frequently asked <em>questions</em></h2>
+    <p class="section-sub section-sub--center">Everything you need to know before your first visit, from booking to results.</p>
+  </div>
+
+  <div class="faq__list reveal">
+    <div class="faq__item">
+      <button class="faq__q" type="button" aria-expanded="false" aria-controls="faq-1" id="faq-1-btn">
+        Do I need a referral to book a consultation?
+        <span class="faq__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span>
+      </button>
+      <div class="faq__a" id="faq-1" role="region" aria-labelledby="faq-1-btn">
+        <div><p>No. You can book directly with our Bradenton clinic online or by calling <a href="tel:9415547546">941-554-7546</a>. Every new patient begins with a one-on-one consultation with Dr. Chapman.</p></div>
       </div>
+    </div>
 
-      <div class="faq__list">
-        <div class="faq__item">
-          <button class="faq__q" type="button" aria-expanded="false" aria-controls="faq-1" id="faq-1-btn">
-            Do I need a referral to book a consultation?
-            <span class="faq__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span>
-          </button>
-          <div class="faq__a" id="faq-1" role="region" aria-labelledby="faq-1-btn">
-            <div><p>No. You can book directly with our Bradenton clinic online or by calling <a href="tel:9415547546">941-554-7546</a>. Every new patient begins with a one-on-one consultation with Dr. Chapman.</p></div>
-          </div>
-        </div>
+    <div class="faq__item">
+      <button class="faq__q" type="button" aria-expanded="false" aria-controls="faq-2" id="faq-2-btn">
+        What happens at my first visit?
+        <span class="faq__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span>
+      </button>
+      <div class="faq__a" id="faq-2" role="region" aria-labelledby="faq-2-btn">
+        <div><p>We start by listening. Dr. Chapman reviews your goals, history, and any prior labs, then recommends a plan across medical weight loss, hormone care, aesthetics, or spa services as appropriate.</p></div>
+      </div>
+    </div>
 
-        <div class="faq__item">
-          <button class="faq__q" type="button" aria-expanded="false" aria-controls="faq-2" id="faq-2-btn">
-            What happens at my first visit?
-            <span class="faq__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span>
-          </button>
-          <div class="faq__a" id="faq-2" role="region" aria-labelledby="faq-2-btn">
-            <div><p>We start by listening. Dr. Chapman reviews your goals, history, and any prior labs, then recommends a plan across medical weight loss, hormone care, aesthetics, or spa services as appropriate.</p></div>
-          </div>
-        </div>
+    <div class="faq__item">
+      <button class="faq__q" type="button" aria-expanded="false" aria-controls="faq-3" id="faq-3-btn">
+        Are treatments physician-led?
+        <span class="faq__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span>
+      </button>
+      <div class="faq__a" id="faq-3" role="region" aria-labelledby="faq-3-btn">
+        <div><p>Yes. Dr. Pamela Chapman oversees every plan, and medical treatments such as injectables, hormone therapy, and IV therapy are physician-directed.</p></div>
+      </div>
+    </div>
 
-        <div class="faq__item">
-          <button class="faq__q" type="button" aria-expanded="false" aria-controls="faq-3" id="faq-3-btn">
-            Are treatments physician-led?
-            <span class="faq__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span>
-          </button>
-          <div class="faq__a" id="faq-3" role="region" aria-labelledby="faq-3-btn">
-            <div><p>Yes. Dr. Pamela Chapman oversees every plan, and medical treatments such as injectables, hormone therapy, and IV therapy are physician-directed.</p></div>
-          </div>
-        </div>
+    <div class="faq__item">
+      <button class="faq__q" type="button" aria-expanded="false" aria-controls="faq-4" id="faq-4-btn">
+        Which areas do you serve?
+        <span class="faq__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span>
+      </button>
+      <div class="faq__a" id="faq-4" role="region" aria-labelledby="faq-4-btn">
+        <div><p>Our clinic is at 6114 Manatee Ave W in Bradenton. Patients visit from Sarasota, Lakewood Ranch, Venice, Parrish, Anna Maria Island, Longboat Key, and across Manatee and Sarasota counties.</p></div>
+      </div>
+    </div>
 
-        <div class="faq__item">
-          <button class="faq__q" type="button" aria-expanded="false" aria-controls="faq-4" id="faq-4-btn">
-            Which areas do you serve?
-            <span class="faq__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span>
-          </button>
-          <div class="faq__a" id="faq-4" role="region" aria-labelledby="faq-4-btn">
-            <div><p>Our clinic is at 6114 Manatee Ave W in Bradenton. Patients visit from Sarasota, Lakewood Ranch, Venice, Parrish, Anna Maria Island, Longboat Key, and across Manatee and Sarasota counties.</p></div>
-          </div>
-        </div>
+    <div class="faq__item">
+      <button class="faq__q" type="button" aria-expanded="false" aria-controls="faq-5" id="faq-5-btn">
+        How soon will I see results?
+        <span class="faq__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span>
+      </button>
+      <div class="faq__a" id="faq-5" role="region" aria-labelledby="faq-5-btn">
+        <div><p>It depends on the treatment. Injectables show results within days, while weight loss, hormone, and peptide programs build over weeks. Results vary by individual, and we track progress together at follow-up visits.</p></div>
+      </div>
+    </div>
 
-        <div class="faq__item">
-          <button class="faq__q" type="button" aria-expanded="false" aria-controls="faq-5" id="faq-5-btn">
-            How soon will I see results?
-            <span class="faq__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span>
-          </button>
-          <div class="faq__a" id="faq-5" role="region" aria-labelledby="faq-5-btn">
-            <div><p>It depends on the treatment. Injectables show results within days, while weight loss, hormone, and peptide programs build over weeks. Results vary by individual, and we track progress together at follow-up visits.</p></div>
-          </div>
-        </div>
-
-        <div class="faq__item">
-          <button class="faq__q" type="button" aria-expanded="false" aria-controls="faq-6" id="faq-6-btn">
-            Do you offer memberships or financing?
-            <span class="faq__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span>
-          </button>
-          <div class="faq__a" id="faq-6" role="region" aria-labelledby="faq-6-btn">
-            <div><p>Ask about current options at your consultation. We will walk you through pricing clearly before any treatment begins.</p></div>
-          </div>
-        </div>
+    <div class="faq__item">
+      <button class="faq__q" type="button" aria-expanded="false" aria-controls="faq-6" id="faq-6-btn">
+        Do you offer memberships or financing?
+        <span class="faq__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span>
+      </button>
+      <div class="faq__a" id="faq-6" role="region" aria-labelledby="faq-6-btn">
+        <div><p>Ask about current options at your consultation. We will walk you through pricing clearly before any treatment begins.</p></div>
       </div>
     </div>
   </div>
@@ -569,87 +624,80 @@
 
 
 <!-- ===== Blog ==========================================================
-     The four posts below are the canvas's placeholder titles and link
+     The four posts below carry the canvas's placeholder titles and link
      nowhere yet. Point each at a real article, or drop the section, before
-     this goes to a live domain.
+     this goes to a custom domain.
      ==================================================================== -->
 <section class="blog" id="blog">
   <div class="container">
-    <p class="eyebrow">Blog</p>
-    <h2 class="display display--3 section-head__title">Latest insights &amp; guidance</h2>
-    <p>Practical notes on functional medicine, weight loss, aesthetics, and recovery, from the clinic.</p>
-
     <div class="blog__grid">
-      <article class="post reveal">
-        <div class="post__media"><img src="/assets/img/blog-1.jpg" alt="" loading="lazy" width="800" height="537"></div>
-        <div class="post__body">
-          <p class="post__cat">Functional Medicine</p>
-          <h3 class="post__title">Hormone Health After 40: What Every Woman Should Know</h3>
-        </div>
-      </article>
+      <div class="blog__head reveal">
+        <p class="eyebrow">Blog</p>
+        <h2 class="section-title">Latest insights &amp; guidance</h2>
+        <p class="section-sub">Practical notes on functional medicine, weight loss, aesthetics, and recovery, from the clinic.</p>
+      </div>
 
-      <article class="post reveal">
-        <div class="post__media"><img src="/assets/img/blog-2.jpg" alt="" loading="lazy" width="800" height="537"></div>
-        <div class="post__body">
-          <p class="post__cat">Aesthetics</p>
-          <h3 class="post__title">Sculptra vs. Fillers: Choosing the Right Lift for You</h3>
-        </div>
-      </article>
-
-      <article class="post reveal">
-        <div class="post__media"><img src="/assets/img/blog-3.jpg" alt="" loading="lazy" width="800" height="537"></div>
-        <div class="post__body">
-          <p class="post__cat">Weight Loss</p>
-          <h3 class="post__title">Medical Weight Loss, Explained by a Physician</h3>
-        </div>
-      </article>
-
-      <article class="post reveal">
-        <div class="post__media"><img src="/assets/img/blog-4.jpg" alt="" loading="lazy" width="800" height="537"></div>
-        <div class="post__body">
-          <p class="post__cat">Wellness &amp; Recovery</p>
-          <h3 class="post__title">IV Therapy for Recovery: What to Expect at Your First Visit</h3>
-        </div>
-      </article>
+      <div class="blog__list">
+        <a class="post reveal" href="#blog">
+          <span class="post__media"><img src="/assets/img/blog-1.jpg" alt="" loading="lazy" width="800" height="537"></span>
+          <span>
+            <span class="post__cat">Functional Medicine</span>
+            <span class="post__title">Hormone Health After 40: What Every Woman Should Know</span>
+          </span>
+        </a>
+        <a class="post reveal" href="#blog">
+          <span class="post__media"><img src="/assets/img/blog-2.jpg" alt="" loading="lazy" width="800" height="537"></span>
+          <span>
+            <span class="post__cat">Aesthetics</span>
+            <span class="post__title">Sculptra vs. Fillers: Choosing the Right Lift for You</span>
+          </span>
+        </a>
+        <a class="post reveal" href="#blog">
+          <span class="post__media"><img src="/assets/img/blog-3.jpg" alt="" loading="lazy" width="800" height="537"></span>
+          <span>
+            <span class="post__cat">Weight Loss</span>
+            <span class="post__title">Medical Weight Loss, Explained by a Physician</span>
+          </span>
+        </a>
+        <a class="post reveal" href="#blog">
+          <span class="post__media"><img src="/assets/img/blog-4.jpg" alt="" loading="lazy" width="800" height="537"></span>
+          <span>
+            <span class="post__cat">Wellness &amp; Recovery</span>
+            <span class="post__title">IV Therapy for Recovery: What to Expect at Your First Visit</span>
+          </span>
+        </a>
+      </div>
     </div>
   </div>
 </section>
 
 
-<!-- ===== CTA / booking ================================================= -->
+<!-- ===== Booking ======================================================= -->
 <section class="cta" id="book">
   <div class="cta__backdrop">
+    <div class="cta__backdrop-wash"></div>
     <img src="/assets/img/cta-backdrop.jpg" alt="" loading="lazy" width="2000" height="848">
   </div>
 
-  <div class="container">
-    <div class="cta__grid">
-      <div>
-        <h2 class="display display--2 display--on-dark cta__title">
-          Ready to feel like <em>yourself</em> again?
-        </h2>
-        <p class="lead lead--on-dark" style="max-width:46ch">
-          Answer a few quick questions and we will match you with the right first step
-          with Dr. Pamela Chapman in Bradenton.
-        </p>
-        <p class="lead lead--on-dark" style="margin-top:1.5rem">
-          Prefer to talk? Call <a href="tel:9415547546" style="color:var(--gold-300)">941-554-7546</a>.
-        </p>
-      </div>
-
-      <div class="cta__form">
-        <iframe src="https://api.leadconnectorhq.com/widget/survey/slJ4We2UDmMVR7QG962b"
-                title="Book a consultation with The Beauty and Wellness Institute"
-                style="height:520px" scrolling="no" loading="lazy"></iframe>
-      </div>
+  <div class="cta__inner reveal">
+    <h2 class="cta__title">Ready to feel like<br><em>yourself</em> again?</h2>
+    <p class="cta__lead">
+      Answer a few quick questions and we will match you with the right first step
+      with Dr. Pamela Chapman in Bradenton.
+    </p>
+    <div class="cta__form">
+      <iframe src="https://api.leadconnectorhq.com/widget/survey/slJ4We2UDmMVR7QG962b"
+              title="Book a consultation with The Beauty and Wellness Institute"
+              scrolling="no" loading="lazy"></iframe>
     </div>
+    <p class="cta__phone">Prefer to talk? Call <a href="tel:9415547546">941-554-7546</a>.</p>
   </div>
 </section>
 
 </main>
 
 
-<footer class="site-footer">
+<footer class="site-footer" id="contact">
   <div class="container">
     <div class="site-footer__grid">
       <div class="site-footer__brand">
@@ -658,10 +706,18 @@
           Medical weight loss, hormone care, aesthetics, and spa services in Bradenton,
           led by Dr. Pamela Chapman.
         </p>
+        <div class="site-footer__social">
+          <a href="https://www.instagram.com/drpamelachapman/" rel="noopener" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg>
+          </a>
+          <a href="https://www.facebook.com/thebeautyandwellnessinstitute/" rel="noopener" aria-label="Facebook">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+        </div>
       </div>
 
-      <div>
-        <h3>Services</h3>
+      <div class="site-footer__col">
+        <h2>Services</h2>
         <ul>
           <li><a href="#services">Medical Weight Loss</a></li>
           <li><a href="#services">Hormone Replacement Therapy</a></li>
@@ -673,8 +729,8 @@
         </ul>
       </div>
 
-      <div>
-        <h3>Practice</h3>
+      <div class="site-footer__col">
+        <h2>Practice</h2>
         <ul>
           <li><a href="#about">Dr. Pamela Chapman</a></li>
           <li><a href="#about">About TBWI</a></li>
@@ -684,12 +740,8 @@
         </ul>
       </div>
 
-      <div>
-        <h3>Connect</h3>
-        <ul>
-          <li><a href="https://www.instagram.com/drpamelachapman/" rel="noopener">Instagram</a></li>
-          <li><a href="https://www.facebook.com/thebeautyandwellnessinstitute/" rel="noopener">Facebook</a></li>
-        </ul>
+      <div class="site-footer__col">
+        <h2>Visit</h2>
         <address class="site-footer__contact">
           <a href="tel:9415547546">941-554-7546</a>
           6114 Manatee Ave W<br>
@@ -699,10 +751,7 @@
     </div>
 
     <div class="site-footer__bottom">
-      <p style="margin:0">
-        © 2026 The Beauty and Wellness Institute. Results vary by individual.
-        Consultation required.
-      </p>
+      <p>© 2026 The Beauty and Wellness Institute. Results vary by individual. Consultation required.</p>
       <div class="site-footer__legal">
         <a href="/privacy-policy">Privacy</a>
         <a href="/terms-and-conditions">Terms</a>
