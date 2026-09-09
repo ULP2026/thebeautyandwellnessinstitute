@@ -1,0 +1,329 @@
+/* ==========================================================================
+   TBWI — shared chrome: header + nav, the CTA band, and the footer.
+
+   These are the pieces that repeat on every page, so they live apart from
+   home.css. Ported from the design canvas.
+   ========================================================================== */
+
+/* --- Header ------------------------------------------------------------- */
+
+/* The canvas floats the header over the dark hero. It only gains a solid
+   background once the page scrolls past the hero, via .is-stuck from main.js. */
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  transition: background var(--dur-base) var(--ease-standard),
+              box-shadow var(--dur-base) var(--ease-standard),
+              border-color var(--dur-base) var(--ease-standard);
+  border-bottom: 1px solid transparent;
+}
+
+.site-header.is-stuck {
+  background: rgba(251, 250, 246, 0.94);
+  backdrop-filter: blur(10px);
+  border-bottom-color: var(--border-subtle);
+  box-shadow: var(--shadow-sm);
+}
+
+.site-header__inner {
+  max-width: 1240px;
+  margin-inline: auto;
+  padding: var(--space-4) var(--gutter);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-6);
+  min-width: 0;
+}
+
+.site-header__logo { flex-shrink: 0; display: flex; align-items: center; }
+
+/* The lockup is a square 1500x1500 PNG — arched wordmark, botanical mark, and
+   "Dr. Pamela Chapman" — so height and width track together. The canvas used 64px, but the PNG carries wide internal
+   margins that leave the lockup illegible at that size, so this runs larger. */
+.site-header__logo img {
+  height: 84px;
+  width: 84px;
+  transition: height var(--dur-base) var(--ease-standard),
+              width var(--dur-base) var(--ease-standard),
+              filter var(--dur-base) var(--ease-standard);
+}
+.site-header.is-stuck .site-header__logo img { height: 60px; width: 60px; }
+
+/* The artwork is cream on transparent, which reads on the dark hero but would
+   disappear against the pale stuck header. Darken it to a warm charcoal there. */
+.site-header.is-stuck .site-header__logo img { filter: brightness(0.32) saturate(1.5); }
+
+/* --- Desktop nav -------------------------------------------------------- */
+
+.nav { display: flex; align-items: center; gap: var(--space-6); }
+
+.nav__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-body);
+  font-weight: var(--fw-medium);
+  font-size: 12.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(247, 244, 237, 0.82);
+  white-space: nowrap;
+  transition: color var(--dur-base) var(--ease-standard);
+}
+.nav__link:hover { color: #fff; text-decoration: none; }
+
+.site-header.is-stuck .nav__link { color: var(--ink-700); }
+.site-header.is-stuck .nav__link:hover { color: var(--brand-strong); }
+
+.nav__phone {
+  font-size: 12.5px;
+  letter-spacing: 0.12em;
+  font-weight: var(--fw-medium);
+  color: rgba(247, 244, 237, 0.82);
+  white-space: nowrap;
+}
+.nav__phone:hover { color: #fff; text-decoration: none; }
+.site-header.is-stuck .nav__phone { color: var(--ink-700); }
+
+.site-header .btn--on-dark { padding: 0.7rem 1.4rem; font-size: 11.5px; }
+.site-header.is-stuck .btn--on-dark {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #fff;
+}
+.site-header.is-stuck .btn--on-dark:hover { background: var(--brand-strong); }
+
+/* --- Services dropdown -------------------------------------------------- */
+
+.nav__dd { position: relative; display: flex; align-items: center; }
+
+.nav__dd-panel {
+  position: absolute;
+  top: 100%;
+  left: -16px;
+  padding-top: 18px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(6px);
+  transition: opacity var(--dur-base) var(--ease-standard),
+              transform var(--dur-base) var(--ease-standard),
+              visibility var(--dur-base);
+}
+.nav__dd:hover .nav__dd-panel,
+.nav__dd:focus-within .nav__dd-panel {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.nav__dd-grid {
+  width: 560px;
+  padding: var(--space-3);
+  border-radius: 20px;
+  background: rgba(251, 250, 246, 0.97);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-subtle);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-1);
+}
+
+.nav__dd-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  color: var(--ink-900);
+  font-size: 0.92rem;
+  font-weight: var(--fw-regular);
+  letter-spacing: 0;
+  text-transform: none;
+  transition: background var(--dur-fast) var(--ease-standard);
+}
+.nav__dd-item:hover { background: var(--sage-50); text-decoration: none; }
+
+.nav__dd-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--sage-300);
+  color: var(--sage-600);
+  flex-shrink: 0;
+}
+.nav__dd-icon svg { width: 15px; height: 15px; }
+
+/* --- Mobile nav --------------------------------------------------------- */
+
+.nav-toggle {
+  display: none;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid rgba(247, 244, 237, 0.35);
+  border-radius: var(--radius-pill);
+  color: #F7F4ED;
+  cursor: pointer;
+}
+.site-header.is-stuck .nav-toggle { color: var(--ink-900); border-color: var(--border-strong); }
+.nav-toggle svg { width: 20px; height: 20px; }
+.nav-toggle .nav-toggle__close { display: none; }
+.nav-toggle[aria-expanded="true"] .nav-toggle__close { display: block; }
+.nav-toggle[aria-expanded="true"] .nav-toggle__open { display: none; }
+
+.mobile-nav {
+  position: fixed;
+  inset: var(--header-h) 0 0;
+  z-index: 90;
+  background: var(--teal-900);
+  padding: var(--space-6) var(--gutter) var(--space-9);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.mobile-nav[hidden] { display: none; }
+
+.mobile-nav a {
+  display: block;
+  padding: var(--space-4) 0;
+  border-bottom: 1px solid rgba(247, 244, 237, 0.12);
+  color: #F5F2EA;
+  font-size: var(--fs-lead);
+  font-family: var(--font-display);
+}
+.mobile-nav a:hover { text-decoration: none; color: var(--sage-300); }
+.mobile-nav .btn { margin-top: var(--space-5); align-self: flex-start; }
+
+body.nav-open { overflow: hidden; }
+
+@media (max-width: 1100px) {
+  .nav { display: none; }
+  .nav-toggle { display: inline-flex; }
+}
+
+/* --- CTA band ----------------------------------------------------------- */
+
+.cta {
+  position: relative;
+  background: var(--teal-900);
+  padding: var(--space-10) 0;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.cta__backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+.cta__backdrop img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.22;
+}
+.cta__backdrop::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, rgba(38, 48, 45, 0.82) 0%, rgba(38, 48, 45, 0.94) 100%);
+}
+
+.cta__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-9);
+  align-items: center;
+}
+
+.cta__title em {
+  font-style: italic;
+  color: var(--gold-300);
+}
+
+.cta__form {
+  background: var(--paper);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-lg);
+  min-height: 480px;
+}
+.cta__form iframe { width: 100%; border: 0; display: block; }
+
+@media (max-width: 900px) {
+  .cta__grid { grid-template-columns: 1fr; gap: var(--space-7); }
+}
+
+/* --- Footer ------------------------------------------------------------- */
+
+.site-footer {
+  background: var(--teal-900);
+  color: rgba(236, 240, 238, 0.72);
+  padding: var(--space-9) 0 var(--space-6);
+  border-top: 1px solid rgba(247, 244, 237, 0.1);
+}
+
+.site-footer__grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr 1fr;
+  gap: var(--space-7);
+}
+
+.site-footer__brand img { height: 96px; width: 96px; margin-bottom: var(--space-5); }
+.site-footer__brand p { max-width: 34ch; font-size: var(--fs-sm); line-height: var(--lh-body); }
+
+.site-footer h3 {
+  font-family: var(--font-body);
+  font-size: var(--fs-eyebrow);
+  font-weight: var(--fw-medium);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--sage-300);
+  margin-bottom: var(--space-4);
+}
+
+.site-footer li { margin-bottom: var(--space-3); }
+.site-footer a { color: rgba(236, 240, 238, 0.72); font-size: var(--fs-sm); }
+.site-footer a:hover { color: #fff; }
+
+.site-footer__contact { margin-top: var(--space-5); font-size: var(--fs-sm); font-style: normal; }
+.site-footer__contact a { display: block; margin-bottom: var(--space-2); }
+
+.site-footer__bottom {
+  margin-top: var(--space-8);
+  padding-top: var(--space-5);
+  border-top: 1px solid rgba(247, 244, 237, 0.1);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4) var(--space-5);
+  align-items: center;
+  justify-content: space-between;
+  font-size: var(--fs-xs);
+}
+.site-footer__legal { display: flex; gap: var(--space-5); flex-wrap: wrap; }
+
+.site-footer__social { display: flex; gap: var(--space-3); }
+.site-footer__social a {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+@media (max-width: 900px) {
+  .site-footer__grid { grid-template-columns: 1fr 1fr; gap: var(--space-6); }
+  .site-footer__brand { grid-column: 1 / -1; }
+}
+@media (max-width: 560px) {
+  .site-footer__grid { grid-template-columns: 1fr; }
+}

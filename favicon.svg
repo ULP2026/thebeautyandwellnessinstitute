@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- The logo's pill frame and botanical sprig, simplified so it survives 16px. -->
+  <rect width="64" height="64" rx="14" fill="#26302D"/>
+  <rect x="19" y="11" width="26" height="42" rx="13"
+        fill="none" stroke="#E2D2AC" stroke-width="2.5"/>
+  <g fill="none" stroke="#E2D2AC" stroke-width="2.2" stroke-linecap="round">
+    <path d="M32 45V22"/>
+    <path d="M32 26c3.2-.6 5.4-3 5.6-6.4-3.3.4-5.4 2.9-5.6 6.4Z"/>
+    <path d="M32 33c-3.2-.6-5.4-3-5.6-6.4 3.3.4 5.4 2.9 5.6 6.4Z"/>
+    <path d="M32 38c3.2-.6 5.4-3 5.6-6.4-3.3.4-5.4 2.9-5.6 6.4Z"/>
+  </g>
+</svg>

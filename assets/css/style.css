@@ -1,0 +1,409 @@
+/* ==========================================================================
+   TBWI — design tokens, webfonts, and base element styles.
+
+   Ported from the design canvas (design/TBWI-Home-standalone.html). Token
+   names and values match the canvas so the two stay comparable; if you change
+   a colour here, change it there too.
+
+   NOTE ON FONTS: the canvas notes that the brand's licensed fonts were never
+   supplied, so Cormorant Garamond and Jost are close Google Fonts matches to
+   the logo lockup. Swap both families here when the real fonts arrive — every
+   other file goes through --font-display / --font-body.
+   ========================================================================== */
+
+/* --- Webfonts (variable, latin + latin-ext only) ------------------------- */
+
+@font-face {
+  font-family: 'Cormorant Garamond';
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+  src: url('../fonts/cormorant-garamond-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Cormorant Garamond';
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+  src: url('../fonts/cormorant-garamond-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
+    U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020,
+    U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Cormorant Garamond';
+  font-style: italic;
+  font-weight: 300 700;
+  font-display: swap;
+  src: url('../fonts/cormorant-garamond-italic-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Cormorant Garamond';
+  font-style: italic;
+  font-weight: 300 700;
+  font-display: swap;
+  src: url('../fonts/cormorant-garamond-italic-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
+    U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020,
+    U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Jost';
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+  src: url('../fonts/jost-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Jost';
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+  src: url('../fonts/jost-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
+    U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020,
+    U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* --- Colour ------------------------------------------------------------- */
+
+:root {
+  /* Brand: sage (primary, from the botanical mark) */
+  --sage-50:  #F4F6F1;
+  --sage-100: #E7EBDF;
+  --sage-200: #D2DAC4;
+  --sage-300: #B7C3A4;
+  --sage-400: #9FAD89;
+  --sage-500: #889878;
+  --sage-600: #6F7E61;
+  --sage-700: #58644E;
+  --sage-800: #444D3D;
+  --sage-900: #333A2E;
+
+  /* Brand: slate teal (secondary, from the wordmark) */
+  --teal-50:  #EFF3F2;
+  --teal-100: #DCE5E3;
+  --teal-200: #BCCCC8;
+  --teal-300: #93ACA6;
+  --teal-400: #7A9690;
+  --teal-500: #608078;
+  --teal-600: #4E6962;
+  --teal-700: #3F544F;
+  --teal-800: #32423E;
+  --teal-900: #26302D;
+
+  /* Warm neutrals */
+  --ivory:      #F7F4ED;
+  --paper:      #FBFAF6;
+  --white:      #FFFFFF;
+  --greige-100: #F0ECE2;
+  --greige-200: #E6E1D6;
+  --greige-300: #DAD5C9;
+  --greige-400: #C7C1B2;
+
+  --ink-900: #2C322B;
+  --ink-700: #454B43;
+  --ink-500: #6E7268;
+  --ink-400: #8E9187;
+
+  /* Champagne gold, used sparingly */
+  --gold-300: #E2D2AC;
+  --gold-500: #C9A86A;
+  --gold-700: #A8873F;
+
+  /* Semantic aliases — prefer these in components */
+  --brand:          var(--sage-500);
+  --brand-strong:   var(--sage-600);
+  --brand-soft:     var(--sage-100);
+  --brand-contrast: #FFFFFF;
+
+  --accent:         var(--teal-500);
+  --accent-strong:  var(--teal-600);
+  --accent-soft:    var(--teal-100);
+
+  --surface-canvas:  var(--ivory);
+  --surface-card:    var(--white);
+  --surface-raised:  var(--paper);
+  --surface-sunken:  var(--greige-100);
+  --surface-inverse: var(--teal-900);
+
+  --text-heading:    var(--ink-900);
+  --text-body:       var(--ink-700);
+  --text-muted:      var(--ink-500);
+  --text-subtle:     var(--ink-400);
+  --text-on-brand:   #FFFFFF;
+  --text-on-inverse: #ECF0EE;
+  --text-link:       var(--teal-600);
+
+  --border-subtle: var(--greige-200);
+  --border-default: var(--greige-300);
+  --border-strong: var(--greige-400);
+  --border-focus:  var(--sage-500);
+
+  --ring: color-mix(in srgb, var(--sage-500) 45%, transparent);
+}
+
+/* --- Typography --------------------------------------------------------- */
+
+:root {
+  --font-display: 'Cormorant Garamond', 'Hoefler Text', Georgia, serif;
+  --font-body:    'Jost', 'Avenir Next', 'Segoe UI', system-ui, sans-serif;
+
+  --fw-light: 300;
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-display: 500;
+
+  --fs-display-1: clamp(3rem, 6vw, 5rem);
+  --fs-display-2: clamp(2.4rem, 4.5vw, 3.5rem);
+  --fs-display-3: clamp(1.9rem, 3vw, 2.5rem);
+
+  --fs-h1: 2.25rem;
+  --fs-h2: 1.75rem;
+  --fs-h3: 1.375rem;
+  --fs-h4: 1.125rem;
+
+  --fs-lead: 1.25rem;
+  --fs-body: 1rem;
+  --fs-sm: 0.875rem;
+  --fs-xs: 0.75rem;
+
+  --fs-eyebrow: 0.8125rem;
+  --tracking-eyebrow: 0.22em;
+  --tracking-arch: 0.14em;
+  --tracking-wide: 0.04em;
+  --tracking-tight: -0.01em;
+
+  --lh-display: 1.05;
+  --lh-heading: 1.18;
+  --lh-body: 1.6;
+  --lh-snug: 1.4;
+}
+
+/* --- Spacing, radius, shadow, motion, layout ---------------------------- */
+
+:root {
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+  --space-10: 8rem;
+
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 28px;
+  --radius-pill: 999px;
+
+  --shadow-xs: 0 1px 2px rgba(44, 50, 43, 0.05);
+  --shadow-sm: 0 1px 3px rgba(44, 50, 43, 0.06), 0 1px 2px rgba(44, 50, 43, 0.04);
+  --shadow-md: 0 4px 14px rgba(58, 70, 55, 0.08), 0 2px 6px rgba(58, 70, 55, 0.05);
+  --shadow-lg: 0 14px 40px rgba(58, 70, 55, 0.12), 0 6px 14px rgba(58, 70, 55, 0.06);
+  --shadow-focus: 0 0 0 3px var(--ring);
+
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 140ms;
+  --dur-base: 220ms;
+  --dur-slow: 360ms;
+
+  --container-max: 1200px;
+  --container-prose: 680px;
+  --gutter: clamp(1.25rem, 5vw, 2.5rem);
+  --header-h: 76px;
+}
+
+/* --- Base --------------------------------------------------------------- */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  /* Anchored sections clear the fixed header. */
+  scroll-padding-top: var(--header-h);
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-weight: var(--fw-regular);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--text-body);
+  background: var(--surface-canvas);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  /* `clip`, not `hidden`. overflow-x:hidden turns body into a scroll container,
+     which breaks position:sticky for the services rail and the how-we-work
+     sequence — they unpin and leave a tall blank gap. `clip` contains the same
+     overflow without creating that scroll container. */
+  overflow-x: clip;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: var(--fw-display);
+  color: var(--text-heading);
+  line-height: var(--lh-heading);
+  margin: 0 0 0.4em;
+  letter-spacing: var(--tracking-tight);
+}
+h1 { font-size: var(--fs-h1); }
+h2 { font-size: var(--fs-h2); }
+h3 { font-size: var(--fs-h3); }
+h4 {
+  font-size: var(--fs-h4);
+  font-family: var(--font-body);
+  font-weight: var(--fw-medium);
+  letter-spacing: 0;
+}
+
+p { margin: 0 0 1em; text-wrap: pretty; }
+p:last-child { margin-bottom: 0; }
+
+a { color: var(--text-link); text-decoration: none; }
+a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+img, video { max-width: 100%; display: block; }
+
+ul { margin: 0; padding: 0; list-style: none; }
+
+:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 3px;
+  border-radius: var(--radius-xs);
+}
+
+/* --- Shared primitives -------------------------------------------------- */
+
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.eyebrow {
+  font-family: var(--font-body);
+  font-weight: var(--fw-medium);
+  font-size: var(--fs-eyebrow);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 var(--space-4);
+}
+.eyebrow--on-dark { color: var(--sage-300); }
+
+.display {
+  font-family: var(--font-display);
+  font-weight: var(--fw-display);
+  line-height: var(--lh-display);
+  letter-spacing: var(--tracking-tight);
+  color: var(--text-heading);
+  margin: 0;
+}
+.display--1 { font-size: var(--fs-display-1); }
+.display--2 { font-size: var(--fs-display-2); }
+.display--3 { font-size: var(--fs-display-3); }
+.display--on-dark { color: #F5F2EA; }
+
+.lead {
+  font-size: var(--fs-lead);
+  font-weight: var(--fw-light);
+  line-height: var(--lh-snug);
+  color: var(--text-muted);
+}
+.lead--on-dark { color: rgba(236, 240, 238, 0.78); }
+
+/* Buttons — pill, echoing the logo's oval frame. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: 0.9rem 1.9rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background var(--dur-base) var(--ease-standard),
+              color var(--dur-base) var(--ease-standard),
+              border-color var(--dur-base) var(--ease-standard),
+              transform var(--dur-fast) var(--ease-standard);
+}
+.btn:hover { text-decoration: none; transform: translateY(-1px); }
+.btn:active { transform: translateY(0); }
+
+.btn--primary { background: var(--brand); color: var(--text-on-brand); }
+.btn--primary:hover { background: var(--brand-strong); }
+
+.btn--ghost {
+  background: transparent;
+  color: var(--text-heading);
+  border-color: var(--border-strong);
+}
+.btn--ghost:hover { border-color: var(--brand); color: var(--brand-strong); }
+
+.btn--on-dark {
+  background: transparent;
+  color: #F5F2EA;
+  border-color: rgba(245, 242, 234, 0.4);
+}
+.btn--on-dark:hover {
+  background: rgba(245, 242, 234, 0.1);
+  border-color: rgba(245, 242, 234, 0.75);
+}
+
+/* Screen-reader-only, for the skip link and icon-button labels. */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.skip-link {
+  position: absolute;
+  top: var(--space-3);
+  left: var(--space-3);
+  z-index: 200;
+  padding: var(--space-3) var(--space-5);
+  background: var(--white);
+  color: var(--text-heading);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-160%);
+  transition: transform var(--dur-base) var(--ease-out);
+}
+.skip-link:focus-visible { transform: translateY(0); }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
