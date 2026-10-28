@@ -55,6 +55,17 @@ def fix(tpl, name):
         sub('>Dr. Pamela Chapman<', '>Pamela Chapman<', 1)  # credentials sit on the line below
     assert 'Dr. Pamela Chapman' not in re.sub(r'/\*.*?\*/', '', tpl, flags=re.S), name  # CSS comments aside
 
+    # Header: no Contact link in the desktop menu or the phone menu. The
+    # footer keeps its Contact column.
+    tpl, n = re.subn(r'\n[ \t]*<a href="#contact"(?: data-mnav-link="")? style="[^"]*">Contact</a>', '', tpl)
+    assert n == 2, (name, n)
+
+    # Phones: the header appointment button is meant to hide (the menu has its
+    # own), but the rule looked for href="#book" and the button now goes to the
+    # form, so it stayed and pushed the menu button off screen.
+    sub('[data-header-inner] > div:last-child > a[href="#book"] { display: none !important; }',
+        '[data-header-inner] > div:last-child > a:last-child { display: none !important; }', 1)
+
     # One alt text for the SRQ badge everywhere.
     tpl, n = re.subn(r'alt="(?:2026 SRQ Top Doctors, Peer Review|Peer-Selected 2026 SRQ Top Doctor, Family Medicine)"',
                      'alt="%s"' % BADGE_ALT, tpl)
