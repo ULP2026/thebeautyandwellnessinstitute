@@ -103,7 +103,7 @@ NOTES = {
 
 PILLARS = [
     {
-        'id': 'aesthetics', 'num': '01', 'title': 'Aesthetics & Regenerative Beauty',
+        'id': 'aesthetics', 'num': '01', 'bg': 'var(--sage-100)', 'title': 'Aesthetics & Regenerative Beauty',
         'photo': '/assets/site/e8a35dd0aaaaceea.jpg', 'pos': '50% 30%',
         'alt': 'Aesthetic injectable treatment at The Beauty and Wellness Institute',
         'lede': ('Sophisticated aesthetic treatment with natural-looking results. We plan for facial harmony, '
@@ -111,7 +111,7 @@ PILLARS = [
         'rows': AESTHETICS, 'badge': 'Now expanding', 'notes': [1],
     },
     {
-        'id': 'wellness', 'num': '02', 'title': 'Medical Wellness & Weight Management',
+        'id': 'wellness', 'num': '02', 'bg': 'var(--teal-100)', 'title': 'Medical Wellness & Weight Management',
         'photo': '/assets/site/f47b063bbf9ba2da.jpg', 'pos': '42% 55%',
         'alt': 'Physician-supervised medical weight management consultation',
         'lede': ('A physician-led approach to hormonal health, metabolic wellness, and medical weight management, '
@@ -122,7 +122,7 @@ PILLARS = [
                  'medical evaluation and only when clinically appropriate. Results vary by individual.'),
     },
     {
-        'id': 'longevity', 'num': '03', 'title': 'Longevity & IV Wellness',
+        'id': 'longevity', 'num': '03', 'bg': '#EEE6D6', 'title': 'Longevity & IV Wellness',
         'photo': '/assets/site/d3e70d35718af6ca.jpg', 'pos': '50% 50%',
         'alt': 'The IV Lounge at The Beauty and Wellness Institute',
         'lede': ('Our IV Lounge, nutrient therapies, and personalized longevity care, each starting with an '
@@ -166,7 +166,7 @@ def row(c, p, i):
         sub = ('<span style="display:block; margin-top:6px; font-weight:500; font-size:11px; letter-spacing:0.18em; '
                'text-transform:uppercase; color:var(--teal-600)">%s</span>') % e(c['eyebrow'])
     return (
-        '<div id="%s" data-reveal="" data-pl-row="" style="scroll-margin-top:24px; display:grid; grid-template-columns:44px minmax(0, 1fr); gap:20px; padding:44px 0; border-top:1px solid var(--border-default)">'
+        '<div id="%s" data-reveal="" data-pl-row="" style="scroll-margin-top:24px; display:grid; grid-template-columns:44px minmax(0, 1fr); gap:20px; padding:30px 0">'
         '<span style="font-family:var(--font-display); font-weight:500; font-size:1.05rem; line-height:2.1; color:var(--sage-500)">%s.%d</span>'
         '<div style="min-width:0">'
         '<div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px 16px">'
@@ -193,7 +193,7 @@ def credential():
 
 def supplements():
     return (
-        '<div id="supplements" data-reveal="" data-pl-supp="" style="margin-top:8px; padding:36px; border-radius:24px; background:var(--sage-100); '
+        '<div id="supplements" data-reveal="" data-pl-supp="" style="margin-top:8px; padding:36px; border-radius:24px; background:var(--paper); box-shadow:var(--shadow-sm); '
         'display:flex; flex-direction:column; align-items:flex-start; gap:14px">%s'
         '<h4 style="margin:0; font-family:var(--font-display); font-weight:600; font-size:1.75rem; line-height:1.2; color:var(--ink-900)">Professional-Grade Supplements</h4>'
         '<p style="margin:0; max-width:560px; font-weight:300; font-size:0.97rem; line-height:1.7; color:var(--ink-500)">'
@@ -214,7 +214,7 @@ def notes(p):
 
 
 PILLAR = '''
-  <section id="%(id)s" data-pl="" aria-labelledby="%(id)s-title" style="background:var(--ivory)">
+  <section id="%(id)s" data-pl="" aria-labelledby="%(id)s-title" style="background:%(bg)s">
     <div data-pl-grid="" style="max-width:1240px; margin:0 auto; padding:0 40px; display:grid; grid-template-columns:minmax(0, 5fr) minmax(0, 6fr); gap:72px; align-items:start">
       <div data-pl-pin="" style="position:sticky; top:32px; padding:56px 0 48px">
         <figure style="position:relative; margin:0; height:min(36vh, 360px); border-radius:24px; overflow:hidden; background:var(--sage-200); box-shadow:var(--shadow-md)">
@@ -227,7 +227,7 @@ PILLAR = '''
         <p style="margin:14px 0 0; max-width:480px; font-weight:300; font-size:0.98rem; line-height:1.65; color:var(--ink-500); text-wrap:pretty">%(lede)s</p>
         %(cred)s
       </div>
-      <div data-pl-rows="" style="padding:20px 0 72px; min-width:0">%(rows)s%(supp)s%(notes)s</div>
+      <div data-pl-rows="" style="padding:42px 0 72px; min-width:0">%(rows)s%(supp)s%(notes)s</div>
     </div>
   </section>
 '''
@@ -235,7 +235,7 @@ PILLAR = '''
 
 def pillar(p):
     return PILLAR % {
-        'id': p['id'], 'photo': p['photo'], 'alt': e(p['alt']), 'pos': p['pos'], 'num': p['num'],
+        'id': p['id'], 'bg': p['bg'], 'photo': p['photo'], 'alt': e(p['alt']), 'pos': p['pos'], 'num': p['num'],
         'eb': eyebrow('Pillar %s of 03' % p['num']), 'title': e(p['title']), 'lede': e(p['lede']),
         'cred': credential() if p.get('credential') else '',
         'rows': ''.join(row(c, p, i) for i, c in enumerate(p['rows'])),
@@ -258,7 +258,7 @@ CSS = '''<style>
       [data-pl-pin] figure { height:auto !important; aspect-ratio:4 / 3; }
       [data-pl-pin] figure span { font-size:3.4rem !important; }
       [data-pl-rows] { padding:8px 0 48px !important; }
-      [data-pl-row] { grid-template-columns:minmax(0, 1fr) !important; gap:4px !important; padding:28px 0 !important; }
+      [data-pl-row] { grid-template-columns:minmax(0, 1fr) !important; gap:4px !important; padding:22px 0 !important; }
       [data-pl-row] h4 { font-size:1.5rem !important; }
       [data-pl-supp] { padding:28px 22px !important; }
       [data-pl-supp] a, [data-pl-supp] button { width:100% !important; justify-content:center !important; }
