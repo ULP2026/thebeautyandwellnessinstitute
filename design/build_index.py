@@ -87,11 +87,21 @@ FOOT_COL = ('<div>\n        <div style="font-weight:500; font-size:11.5px; lette
             '        <div style="display:flex; flex-direction:column; gap:13px">\n          %s\n        </div>\n      </div>\n      ') % \
            '\n          '.join([FOOT_LINK % (pillars.e(pillars.FULLSCRIPT_URL), ' target="_blank" rel="noopener"', 'Professional-Grade Supplements'),
                                FOOT_LINK % ('#book', '', 'Book a Consultation'),
-                               FOOT_LINK % ('#faq', '', 'Patient FAQ'),
-                               FOOT_LINK % ('tel:9415547546', '', 'Call the Clinic')])
+                               FOOT_LINK % ('#faq', '', 'Patient FAQ')])
 CONNECT = ('<div>\n        <div style="font-weight:500; font-size:11.5px; letter-spacing:0.22em; text-transform:uppercase; '
            'color:var(--sage-300); margin-bottom:20px">Connect</div>')
-tpl = sub1(CONNECT, FOOT_COL + CONNECT, tpl)
+tpl = sub1(CONNECT, FOOT_COL + CONNECT.replace('>Connect<', '>Contact<'), tpl)
+
+# Contact column: Instagram and Facebook already appear as icons under the logo,
+# so the column keeps the phone and the address (which opens directions).
+tpl = re.sub(r'\n          <a href="https://www\.(instagram|facebook)\.com/[^"]*" target="_blank" rel="noopener" style="font-weight:400;[^\n]*</a>',
+             '', tpl)
+assert tpl.count('instagram.com') == 1 and tpl.count('facebook.com') == 1
+ADDR = '<span style="font-weight:300; font-size:0.9rem; line-height:1.6; color:rgba(236,240,238,0.6)">6114 Manatee Ave W<br>Bradenton, FL 34209</span>'
+tpl = sub1(ADDR, '<a href="https://www.google.com/maps/search/?api=1&amp;query=6114+Manatee+Ave+W,+Bradenton,+FL+34209" '
+                 'target="_blank" rel="noopener" style="font-weight:300; font-size:0.9rem; line-height:1.6; '
+                 'color:rgba(236,240,238,0.6); text-decoration:none; transition:color 220ms var(--ease-standard)" '
+                 'style-hover="color:#F5F2EA">6114 Manatee Ave W<br>Bradenton, FL 34209</a>', tpl)
 
 # ---- move media out of the inline manifest --------------------------------
 outdir = os.path.join(repo, 'assets', 'site')
