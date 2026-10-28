@@ -121,7 +121,72 @@ def fix(tpl, name):
         sub('      [data-area-map] { height: 250px !important; }\n',
             '      [data-area-map] { height: 250px !important; }\n'
             '      [data-area-pin]:not(.is-on):not([data-area-key="clinic"]) [data-pin-name] { display: none !important; }\n', 1)
+        # About photo: no Top Doctor badge on the portrait (it stays in the footer).
+        tpl, n = re.subn(r'\n[ \t]*<span data-fig-badge="".*?</span>(?=\n)', '', tpl, count=1, flags=re.S)
+        assert n == 1, name
+        # "More than a medspa" marquee: affiliation and recognition logos in
+        # place of the service tiles.
+        tpl, n = re.subn(r'(<div data-marquee="" style="[^"]*">).*?(\n      </div>\n    </div>)',
+                         lambda m: m.group(1) + logo_marquee() + m.group(2), tpl, count=1, flags=re.S)
+        assert n == 1, name
+        # The logo loop is longer than the old tile loop; 56s keeps it at about
+        # the old pace (~55px/s) instead of rushing.
+        sub('animation:tbwiMarqueeL 32s linear infinite', 'animation:tbwiMarqueeL 56s linear infinite', 1)
+        sub('(this.props.marqueeSpeed ?? 32)', '(this.props.marqueeSpeed ?? 56)', 1)
+        sub('&quot;default&quot;: 32, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Motion&quot;',
+            '&quot;default&quot;: 56, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Motion&quot;', 1)
+        sub('      [data-marq-wrap] { margin-top: 44px !important; }\n',
+            '      [data-marq-wrap] { margin-top: 44px !important; --logo-scale: 0.72; }\n', 1)
+
+    # Footer: the About link is named for the section it opens.
+    foot = tpl.index('<footer')
+    tail, n = re.subn(r'>Meet Pamela Chapman, DO, DABOM</a>', '>About &amp; Our Philosophy</a>', tpl[foot:])
+    assert n == 1, (name, n)
+    tpl = tpl[:foot] + tail
     return tpl
+
+
+# Logos for the homepage marquee, in design/logos/: single-colour renders in
+# the section's heading colour (#E7EBDF) with transparent backgrounds, made
+# from the supplied artwork without stretching. Heights follow equal visual
+# area (height = sqrt(AREA / aspect)), capped so the square badge doesn't tower.
+LOGOS = [
+    ('aafp.png', 'American Academy of Family Physicians'),
+    ('acofp.png', 'American College of Osteopathic Family Physicians'),
+    ('ifm.png', 'The Institute for Functional Medicine'),
+    ('srq-2026.png', 'Peer-Selected 2026 SRQ Top Doctor, Family Medicine'),
+    ('srq-2020.png', 'SRQ Magazine Top Doctors Peer Review 2020 Honoree'),
+]
+LOGO_AREA, LOGO_MAX_H = 6400, 70
+
+
+def asset(path):
+    b = open(path, 'rb').read()
+    name = '%s%s' % (hashlib.sha256(b).hexdigest()[:16], os.path.splitext(path)[1])
+    open(os.path.join(ROOT, 'assets', 'site', name), 'wb').write(b)
+    return '/assets/site/' + name
+
+
+def logo_marquee():
+    from PIL import Image
+    items = []
+    for f, alt in LOGOS:
+        path = os.path.join(ROOT, 'design', 'logos', f)
+        w, h = Image.open(path).size
+        height = min(LOGO_MAX_H, round((LOGO_AREA * h / w) ** 0.5))
+        items.append((asset(path), alt, height, round(height * w / h)))
+
+    def logo(src, alt, height, width, hidden):
+        return ('<img src="%s" alt="%s" width="%d" height="%d" loading="eager" decoding="async" '
+                'style="height:calc(%dpx * var(--logo-scale, 1)); width:auto; flex-shrink:0; display:block; opacity:0.92"%s>'
+                ) % (src, '' if hidden else alt, width, height, height, ' aria-hidden="true"' if hidden else '')
+
+    # Each half of the loop repeats the five logos three times, so a half is
+    # wider than any screen and the -50% loop never shows a gap.
+    def half(hidden):
+        return ('\n        <div data-logo-set="" style="display:flex; align-items:center; gap:76px; padding-right:76px">%s\n        </div>'
+                % ''.join('\n          ' + logo(*it, hidden=hidden or r > 0) for r in range(3) for it in items))
+    return half(False) + half(True)
 
 
 def head(tpl, url):
