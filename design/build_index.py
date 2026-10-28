@@ -57,6 +57,42 @@ tpl = sub1('[data-rs="proc"] [data-media] > div:last-child { transform: scale(0.
 # Pins respond to tap as well as hover.
 tpl = sub1('Hover a pin to see', 'Hover or tap a pin to see', tpl, count=2)
 
+# ---- service pillars (design/pillars.py) ----------------------------------
+import pillars
+tpl = sub1('<!-- ============ SERVICES (pinned horizontal) ============ -->',
+           pillars.render() + '  <!-- ============ SERVICES (pinned horizontal) ============ -->', tpl)
+
+# Header menu: the three pillars sit above the service list.
+DD_LINK = ('<a href="#%s" style="display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:12px; '
+           'color:var(--teal-700); text-decoration:none; font-weight:500; font-size:0.78rem; letter-spacing:0.12em; '
+           'text-transform:uppercase; transition:background 180ms var(--ease-standard)" style-hover="background:var(--sage-50)">'
+           '<i data-lucide="%s" style="width:15px; height:15px; color:var(--gold-500)"></i>%s</a>')
+DD_ROW = ('<div style="grid-column:1 / -1; display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:4px; '
+          'padding-bottom:8px; margin-bottom:6px; border-bottom:1px solid var(--border-subtle)">%s</div>' %
+          ''.join(DD_LINK % x for x in [('aesthetics', 'sparkles', 'Aesthetics'), ('wellness', 'heart-pulse', 'Medical Wellness'),
+                                        ('longevity', 'droplets', 'Longevity &amp; IV')]))
+tpl = sub1('display:grid; grid-template-columns:1fr 1fr; gap:4px">',
+           'display:grid; grid-template-columns:1fr 1fr; gap:4px">\n                ' + DD_ROW, tpl)
+
+MNAV = ('<a href="#%s" data-mnav-link="" style="font-family:var(--font-display); font-weight:500; font-size:1.9rem; '
+        'line-height:1.15; color:#F5F2EA; text-decoration:none">%s</a>\n        ')
+tpl = sub1('<a href="#about" data-mnav-link=""', MNAV % ('pillars', 'Treatments') + '<a href="#about" data-mnav-link=""', tpl)
+
+# Footer: a Patient Resources column carries the Fullscript dispensary link.
+tpl = sub1('grid-template-columns:1.4fr 1fr 1fr 1fr; gap:48px', 'grid-template-columns:1.4fr 1fr 1fr 1fr 1fr; gap:40px', tpl)
+FOOT_LINK = ('<a href="%s"%s style="font-weight:400; font-size:0.9rem; color:rgba(236,240,238,0.72); text-decoration:none; '
+             'transition:color 220ms var(--ease-standard)" style-hover="color:#F5F2EA">%s</a>')
+FOOT_COL = ('<div>\n        <div style="font-weight:500; font-size:11.5px; letter-spacing:0.22em; text-transform:uppercase; '
+            'color:var(--sage-300); margin-bottom:20px">Patient Resources</div>\n'
+            '        <div style="display:flex; flex-direction:column; gap:13px">\n          %s\n        </div>\n      </div>\n      ') % \
+           '\n          '.join([FOOT_LINK % (pillars.e(pillars.FULLSCRIPT_URL), ' target="_blank" rel="noopener"', 'Professional-Grade Supplements'),
+                               FOOT_LINK % ('#book', '', 'Book a Consultation'),
+                               FOOT_LINK % ('#faq', '', 'Patient FAQ'),
+                               FOOT_LINK % ('tel:9415547546', '', 'Call the Clinic')])
+CONNECT = ('<div>\n        <div style="font-weight:500; font-size:11.5px; letter-spacing:0.22em; text-transform:uppercase; '
+           'color:var(--sage-300); margin-bottom:20px">Connect</div>')
+tpl = sub1(CONNECT, FOOT_COL + CONNECT, tpl)
+
 # ---- move media out of the inline manifest --------------------------------
 outdir = os.path.join(repo, 'assets', 'site')
 os.makedirs(outdir, exist_ok=True)
