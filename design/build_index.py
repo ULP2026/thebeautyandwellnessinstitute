@@ -102,6 +102,16 @@ CONNECT = ('<div>\n        <div style="font-weight:500; font-size:11.5px; letter
            'color:var(--sage-300); margin-bottom:20px">Connect</div>')
 tpl = sub1(CONNECT, FOOT_COL + CONNECT.replace('>Connect<', '>Contact<'), tpl)
 
+# Services column: the old eight-service list predates the pillars, so the
+# column now links to the three pillars instead.
+svc = re.compile(r'<div>\n        <div style="[^"]*">Services</div>\n        <div style="display:flex; flex-direction:column; gap:13px">\n.*?\n        </div>\n      </div>\n      ', re.S)
+PILLAR_COL = ('<div>\n        <div style="font-weight:500; font-size:11.5px; letter-spacing:0.22em; text-transform:uppercase; '
+              'color:var(--sage-300); margin-bottom:20px">Treatments</div>\n'
+              '        <div style="display:flex; flex-direction:column; gap:13px">\n          %s\n        </div>\n      </div>\n      ') % \
+             '\n          '.join(FOOT_LINK % ('#' + p['id'], '', pillars.e(p['title'])) for p in pillars.PILLARS)
+tpl, n = svc.subn(lambda m: PILLAR_COL, tpl)
+assert n == 1, n
+
 # Contact column: Instagram and Facebook already appear as icons under the logo,
 # so the column keeps the phone and the address (which opens directions).
 tpl = re.sub(r'\n          <a href="https://www\.(instagram|facebook)\.com/[^"]*" target="_blank" rel="noopener" style="font-weight:400;[^\n]*</a>',
