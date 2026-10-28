@@ -21,6 +21,16 @@
       "source": "/TBWI-Longevity.html",
       "destination": "/longevity",
       "permanent": true
+    },
+    {
+      "source": "/TBWI-Privacy-Policy.html",
+      "destination": "/privacy-policy",
+      "permanent": true
+    },
+    {
+      "source": "/TBWI-Medical-Disclaimer.html",
+      "destination": "/medical-disclaimer",
+      "permanent": true
     }
   ],
   "headers": [

@@ -20,12 +20,14 @@ PAGES = {
     'TBWI-Aesthetics.html': ('aesthetics.html', '/aesthetics'),
     'TBWI-Medical-Wellness.html': ('medical-wellness.html', '/medical-wellness'),
     'TBWI-Longevity.html': ('longevity.html', '/longevity'),
+    'TBWI-Privacy-Policy.html': ('privacy-policy.html', '/privacy-policy'),
+    'TBWI-Medical-Disclaimer.html': ('medical-disclaimer.html', '/medical-disclaimer'),
 }
 
-# The exports carry placeholder links. Until the real ones arrive:
-# - Requests go to the inquiry form the live site already uses (LeadConnector).
-# - Fullscript goes to the Fullscript home page, where patients can sign in.
-JOTFORM_URL = 'https://api.leadconnectorhq.com/widget/survey/slJ4We2UDmMVR7QG962b'
+# Appointment requests go to the practice's Jotform. Some exports still carry
+# a placeholder for it. Fullscript goes to the Fullscript home page, where
+# patients can sign in, until the dispensary link arrives.
+JOTFORM_URL = 'https://form.jotform.com/251495476973069'
 FULLSCRIPT_URL = 'https://fullscript.com/'
 
 BADGE_ALT = 'Peer-Selected 2026 SRQ Top Doctor, Family Medicine'
@@ -44,7 +46,13 @@ def fix(tpl, name):
     for src, (_, url) in PAGES.items():
         tpl = tpl.replace('href="%s#' % src, 'href="%s#' % url.rstrip('/') if url != '/' else 'href="/#')
         tpl = tpl.replace('href="%s"' % src, 'href="%s"' % url)
-    sub('https://form.jotform.com/YOUR-FORM-ID', JOTFORM_URL)
+    tpl = tpl.replace('https://form.jotform.com/YOUR-FORM-ID', JOTFORM_URL)
+    assert JOTFORM_URL in tpl, name
+    # Footer legal links: older exports pointed them at the footer itself.
+    tpl = re.sub(r'<a href="#contact"( style="[^"]*">Privacy Policy</a>)', r'<a href="/privacy-policy"\1', tpl)
+    tpl = re.sub(r'<a href="#medical-disclaimer"( style="[^"]*">Medical Disclaimer</a>)', r'<a href="/medical-disclaimer"\1', tpl)
+    assert re.search(r'href="/privacy-policy"[^>]*>Privacy Policy</a>', tpl) and \
+        re.search(r'href="/medical-disclaimer"[^>]*>Medical Disclaimer</a>', tpl), name
     sub('https://us.fullscript.com/welcome/YOUR-DISPENSARY', FULLSCRIPT_URL)
     assert 'TBWI-' not in re.sub(r'<title>.*?</title>', '', tpl).replace('TBWI-logo', ''), name
 
@@ -77,6 +85,14 @@ def fix(tpl, name):
     if 'Pending regulatory review' in tpl:
         sub('>Pending regulatory review</span>',
             '><!-- PENDING REGULATORY REVIEW -->Consultation required</span>')
+
+    if name != 'TBWI-Home.html':
+        # Phones: the shared "#top { min-height: 100svh }" is for the homepage
+        # hero. On the inner pages it stretched the hero to a full screen, so
+        # the breadcrumb sat mid-screen with empty space or photo under it.
+        sub('      #top[data-screen-label="Hero"] { border-radius: 0 0 22px 22px !important; }\n',
+            '      #top[data-screen-label="Hero"] { border-radius: 0 0 22px 22px !important; }\n'
+            '      #top { min-height: 0 !important; }\n', 1)
 
     if name == 'TBWI-Aesthetics.html':
         # Not every option is "placed" (laser, hair restoration), and who
