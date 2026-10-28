@@ -141,12 +141,80 @@ def fix(tpl, name):
         sub('      [data-marq-wrap] { margin-top: 44px !important; }\n',
             '      [data-marq-wrap] { margin-top: 44px !important; --logo-scale: 0.72; }\n', 1)
 
+    if name == 'TBWI-Home.html':
+        # Reviews: the four real patient reviews in place of the design's
+        # placeholder testimonials. Wording is verbatim apart from one typo
+        # ("Chapamn"). No reviewer location or treatment is claimed beyond
+        # what the review itself says.
+        sub('Kind words from patients in Northwest Bradenton, Anna Maria Island, and beyond. Individual results vary.',
+            'Kind words from our patients. Individual results vary.', 1)
+        for (old_ini, old_name, old_label, old_title, old_quote), (ini, who, title, quote) in zip(OLD_REVIEWS, REVIEWS):
+            sub('>%s</span>' % old_ini, '>%s</span>' % ini, 1)
+            sub('>%s</span>' % old_name, '>%s</span>' % who, 1)
+            sub('>%s</span>' % old_label, '>TBWI patient</span>', 1)
+            sub('>%s</div>' % old_title, '>%s</div>' % e(title), 1)
+            sub('>%s</p>' % old_quote, '>“%s”</p>' % e(quote), 1)
+        # These reviews run longer than the placeholders; slightly smaller
+        # type keeps the fanned cards compact.
+        a, b = tpl.index('<section id="reviews"'), tpl.index('</section>', tpl.index('<section id="reviews"'))
+        part = tpl[a:b]
+        assert part.count('font-size:1.35rem; line-height:1.2') == 4 and part.count('font-size:0.9rem; line-height:1.6') == 4, name
+        part = part.replace('font-size:1.35rem; line-height:1.2', 'font-size:1.12rem; line-height:1.25')
+        part = part.replace('font-size:0.9rem; line-height:1.6', 'font-size:0.84rem; line-height:1.55')
+        tpl = tpl[:a] + part + tpl[b:]
+        # Fan spacing: full-length reviews were hidden where the cards
+        # overlapped, so the fan opens wider (no overlap on desktop) and tilts
+        # less. The script still narrows it on smaller screens.
+        for old, new in [('data-rot="-11" data-x="-390" data-y="34"', 'data-rot="-6" data-x="-486" data-y="22"'),
+                         ('data-rot="-4" data-x="-130" data-y="6"', 'data-rot="-2" data-x="-162" data-y="4"'),
+                         ('data-rot="4" data-x="130" data-y="6"', 'data-rot="2" data-x="162" data-y="4"'),
+                         ('data-rot="11" data-x="390" data-y="34"', 'data-rot="6" data-x="486" data-y="22"')]:
+            sub(old, new, 1)
+        # Narrow the fan so the outer cards (half width 150px, plus tilt) stay
+        # on screen: the outer card's offset is scaled to fit the viewport.
+        sub('const k = Math.max(0.42, Math.min(1, (w - 300) / 780));',
+            'const k = Math.max(0.42, Math.min(1, (window.innerWidth / 2 - 180) / 486));', 1)
+
     # Footer: the About link is named for the section it opens.
     foot = tpl.index('<footer')
     tail, n = re.subn(r'>Meet Pamela Chapman, DO, DABOM</a>', '>About &amp; Our Philosophy</a>', tpl[foot:])
     assert n == 1, (name, n)
     tpl = tpl[:foot] + tail
     return tpl
+
+
+from html import escape as e
+
+# Homepage reviews: (initial, name, headline, quote), from the practice's
+# published patient reviews.
+REVIEWS = [
+    ('J', 'Julia', 'Dr. Chapman really takes the time to listen.',
+     'Dr. Chapman really takes the time to listen to you and I feel that she really hears what my concerns are. '
+     'She offers natural solutions for weight loss and regulating hormones (as well as other issues). I love the '
+     'idea that I can feel in control of my health and wellness. I highly recommend Dr. Chapman.'),
+    ('D', 'Deardra', 'One of the best doctors that I have seen.',
+     'Dr. Chapman is one of the best doctors that I have seen since moving to Florida in 2014. She is patient, '
+     'well informed and listens to her patients and their concerns. I have recommended her to several friends.'),
+    ('J', 'Jennifer', 'Dr. Chapman has been great.',
+     'I’ve gone to her for injectables, advice, and functional medicine. The functional medicine is very thorough. '
+     'It takes a while to get going, but once the process starts she really gives her full attention and seems '
+     'like she actually cares about trying to “fix” you.'),
+    ('A', 'Ashley', 'Highly recommend Dr. Chapman!',
+     'She is very comforting & friendly and takes the time to listen to your needs and present recommendations. '
+     'I had never received a Botox treatment and she was very conservative with her approach, which I appreciated. '
+     'I have been very pleased with the results!'),
+]
+# The design export's placeholder cards, in fan order.
+OLD_REVIEWS = [
+    ('SM', 'Sarah M.', 'Aesthetics patient, Anna Maria Island', 'Natural, and finally me.',
+     '“She took time to understand the whole picture. My results look natural, and I feel like myself again.”'),
+    ('RT', 'Rebecca T.', 'Medical weight management patient', 'Energy I forgot I had.',
+     '“The program changed my energy, my sleep, my skin. I only wish I had started sooner.”'),
+    ('DK', 'Daniel K.', 'Hormone therapy patient', 'Care that actually listens.',
+     '“Every visit feels unhurried. The labs explained things no one else had, and the plan finally made sense.”'),
+    ('LP', 'Lauren P.', 'IV wellness patient, Holmes Beach', 'An hour that resets the week.',
+     '“Calm, beautiful, and never rushed. The IV lounge has become my favorite reset.”'),
+]
 
 
 # Logos for the homepage marquee, in design/logos/: single-colour renders in
