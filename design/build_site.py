@@ -30,7 +30,6 @@ PAGES = {
 JOTFORM_URL = 'https://form.jotform.com/251495476973069'
 FULLSCRIPT_URL = 'https://fullscript.com/'
 
-BADGE_ALT = 'Peer-Selected 2026 SRQ Top Doctor, Family Medicine'
 DESC_RE = re.compile(r'<meta name="description" content="([^"]*)">')
 
 
@@ -74,10 +73,14 @@ def fix(tpl, name):
     sub('[data-header-inner] > div:last-child > a[href="#book"] { display: none !important; }',
         '[data-header-inner] > div:last-child > a:last-child { display: none !important; }', 1)
 
-    # One alt text for the SRQ badge everywhere.
-    tpl, n = re.subn(r'alt="(?:2026 SRQ Top Doctors, Peer Review|Peer-Selected 2026 SRQ Top Doctor, Family Medicine)"',
-                     'alt="%s"' % BADGE_ALT, tpl)
-    assert n, name
+    # Footer: no SRQ badge (it scrolls in the homepage logo strip) and no
+    # short disclaimer paragraph (the Medical Disclaimer page covers it).
+    tpl, n = re.subn(r'\n[ \t]*<div style="display:flex; align-items:center; gap:12px; margin-top:22px">\s*'
+                     r'<span[^>]*><img[^>]*alt="2026 SRQ Top Doctors, Peer Review"[^>]*></span>\s*'
+                     r'<span[^>]*>Peer-Selected 2026 SRQ Top Doctor, Family Medicine</span>\s*</div>', '', tpl)
+    assert n == 1, (name, 'badge', n)
+    tpl, n = re.subn(r'\n[ \t]*<p id="medical-disclaimer"[^>]*><strong[^>]*>Medical disclaimer\.</strong>[^<]*</p>', '', tpl)
+    assert n == 1, (name, 'disclaimer', n)
 
     # Internal review tags read as unfinished on a live page. The copy beside
     # them already says these options are only discussed at consultation; the
@@ -226,9 +229,9 @@ def build(src, out, url):
         if e['mime'] == 'video/mp4':
             b = open(HERO_H264, 'rb').read()
         name = '%s.%s' % (hashlib.sha256(b).hexdigest()[:16], ext[e['mime']])
-        open(os.path.join(outdir, name), 'wb').write(b)
-        assert uuid in tpl, (src, uuid)
-        tpl = tpl.replace(uuid, '/assets/site/' + name)
+        if uuid in tpl:  # media the fixes removed (the footer badge) is dropped
+            open(os.path.join(outdir, name), 'wb').write(b)
+            tpl = tpl.replace(uuid, '/assets/site/' + name)
         del man[uuid]
 
     def enc(o):
