@@ -16,26 +16,26 @@ FULLSCRIPT_URL = 'https://fullscript.com/'
 
 AESTHETICS = [
     {
-        'title': 'Laser Skin Resurfacing', 'featured': True,
+        'id': 'laser-resurfacing', 'title': 'Laser Skin Resurfacing', 'featured': True,
         'desc': 'Resurfacing protocols matched to your skin, your goals, and the downtime you can plan around.',
         'items': ['CO2 laser resurfacing', 'Erbium laser resurfacing',
                   'Fractional laser resurfacing protocols, as appropriate',
                   'Treatment of fine lines, wrinkles, and uneven skin texture'],
     },
     {
-        'title': 'Hair Restoration', 'featured': True,
+        'id': 'hair-restoration', 'title': 'Hair Restoration', 'featured': True,
         'desc': 'Physician-guided options for thinning hair, chosen after a careful look at your history and scalp health.',
         'items': ['Microneedling for hair restoration',
                   'Platelet-Rich Plasma (PRP) hair restoration',
                   ('AnteAGE MD exosome-based treatments', 1)],
     },
     {
-        'title': 'Wrinkle Relaxers', 'eyebrow': 'Neuromodulators',
+        'id': 'wrinkle-relaxers', 'title': 'Wrinkle Relaxers', 'eyebrow': 'Neuromodulators',
         'desc': 'Softens expression lines while keeping your face expressive and recognizably you.',
         'items': ['Botox Cosmetic', 'Dysport', 'Jeuveau', 'Daxxify'],
     },
     {
-        'title': 'Dermal Fillers & Facial Rejuvenation',
+        'id': 'dermal-fillers', 'title': 'Dermal Fillers & Facial Rejuvenation',
         'desc': 'Restores volume and balance with a measured hand, in service of facial harmony.',
         'items': ['Hyaluronic acid dermal fillers', 'Lip enhancement',
                   'Facial balancing and volume restoration',
@@ -47,7 +47,7 @@ AESTHETICS = [
 
 WELLNESS = [
     {
-        'title': 'Medical Weight Management', 'featured': True,
+        'id': 'weight-management', 'title': 'Medical Weight Management', 'featured': True,
         'eyebrow': 'Led by a board-certified Obesity Medicine physician',
         'desc': 'Weight care grounded in obesity medicine: a metabolic evaluation first, then a plan built for your body and designed to last.',
         'items': ['Physician-supervised medical weight management',
@@ -58,7 +58,7 @@ WELLNESS = [
                   'Long-term weight management and maintenance'],
     },
     {
-        'title': "Women's Hormonal Health",
+        'id': 'womens-hormones', 'title': "Women's Hormonal Health",
         'desc': 'Clear answers and steady support through perimenopause, menopause, and the changes around them.',
         'items': ['Perimenopause and menopause consultations',
                   'Hormone replacement therapy (HRT)',
@@ -66,7 +66,7 @@ WELLNESS = [
                   'Ongoing treatment and monitoring'],
     },
     {
-        'title': "Men's Hormonal Health",
+        'id': 'mens-hormones', 'title': "Men's Hormonal Health",
         'desc': 'A thorough evaluation of energy, body composition, and testosterone, with treatment only when it is indicated.',
         'items': ['Testosterone replacement therapy (TRT)',
                   'Low testosterone evaluations',
@@ -77,7 +77,7 @@ WELLNESS = [
 
 LONGEVITY = [
     {
-        'title': 'IV Vitamin Therapy', 'eyebrow': 'The IV Lounge',
+        'id': 'iv-therapy', 'title': 'IV Vitamin Therapy', 'eyebrow': 'The IV Lounge',
         'desc': 'Our IV Lounge uses vitamin infusion protocols from Olympia Pharmaceuticals, selected after a review of your health history.',
         'items': ['IV hydration', 'Vitamin and nutrient infusion protocols',
                   'NAD+ treatments', 'Glutathione treatments',
@@ -85,7 +85,7 @@ LONGEVITY = [
                   'Additional vitamin and wellness injections'],
     },
     {
-        'title': 'Longevity & Peptide Treatments',
+        'id': 'peptides', 'title': 'Longevity & Peptide Treatments',
         'desc': 'An evidence-informed conversation about healthy aging, starting with an individual medical consultation.',
         'items': ['NAD+', 'Glutathione', ('BPC-157', 2), ('GLOW peptide protocols', 2),
                   ('Additional peptide options, as appropriate', 2)],
@@ -166,7 +166,7 @@ def row(c, p, i):
         sub = ('<span style="display:block; margin-top:6px; font-weight:500; font-size:11px; letter-spacing:0.18em; '
                'text-transform:uppercase; color:var(--teal-600)">%s</span>') % e(c['eyebrow'])
     return (
-        '<div data-reveal="" data-pl-row="" style="display:grid; grid-template-columns:44px minmax(0, 1fr); gap:20px; padding:44px 0; border-top:1px solid var(--border-default)">'
+        '<div id="%s" data-reveal="" data-pl-row="" style="scroll-margin-top:24px; display:grid; grid-template-columns:44px minmax(0, 1fr); gap:20px; padding:44px 0; border-top:1px solid var(--border-default)">'
         '<span style="font-family:var(--font-display); font-weight:500; font-size:1.05rem; line-height:2.1; color:var(--sage-500)">%s.%d</span>'
         '<div style="min-width:0">'
         '<div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px 16px">'
@@ -174,7 +174,7 @@ def row(c, p, i):
         '<p style="margin:10px 0 0; max-width:540px; font-weight:300; font-size:0.97rem; line-height:1.65; color:var(--ink-500)">%s</p>'
         '<ul data-pl-list="" style="list-style:none; margin:20px 0 0; padding:0; display:flex; flex-direction:column; gap:10px">%s</ul>'
         '</div></div>'
-    ) % (p['num'], i + 1, e(c['title']), tag, sub, e(c['desc']), ''.join(item(x) for x in c['items']))
+    ) % (c['id'], p['num'], i + 1, e(c['title']), tag, sub, e(c['desc']), ''.join(item(x) for x in c['items']))
 
 
 def credential():

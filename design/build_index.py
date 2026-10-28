@@ -62,21 +62,31 @@ import pillars
 tpl = sub1('<!-- ============ SERVICES (pinned horizontal) ============ -->',
            pillars.render() + '  <!-- ============ SERVICES (pinned horizontal) ============ -->', tpl)
 
-# Header menu: the three pillars sit above the service list.
-DD_LINK = ('<a href="#%s" style="display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:12px; '
-           'color:var(--teal-700); text-decoration:none; font-weight:500; font-size:0.78rem; letter-spacing:0.12em; '
-           'text-transform:uppercase; transition:background 180ms var(--ease-standard)" style-hover="background:var(--sage-50)">'
-           '<i data-lucide="%s" style="width:15px; height:15px; color:var(--gold-500)"></i>%s</a>')
-DD_ROW = ('<div style="grid-column:1 / -1; display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:4px; '
-          'padding-bottom:8px; margin-bottom:6px; border-bottom:1px solid var(--border-subtle)">%s</div>' %
-          ''.join(DD_LINK % x for x in [('aesthetics', 'sparkles', 'Aesthetics'), ('wellness', 'heart-pulse', 'Medical Wellness'),
-                                        ('longevity', 'droplets', 'Longevity &amp; IV')]))
-tpl = sub1('display:grid; grid-template-columns:1fr 1fr; gap:4px">',
-           'display:grid; grid-template-columns:1fr 1fr; gap:4px">\n                ' + DD_ROW, tpl)
+# Navigation (design/nav.py): About, the three pillars, Patient Resources and
+# the appointment button.
+import nav
+tpl, n = re.subn(r'<nav data-nav="".*?</nav>', lambda m: nav.desktop(), tpl, flags=re.S)
+assert n == 1, n
+mn = tpl.index('<div data-mnav=""')
+seg_start = tpl.index('<nav style="display:flex; flex-direction:column; gap:22px">', mn)
+seg_end = tpl.index('</nav>', seg_start) + len('</nav>')
+tpl = tpl[:seg_start] + nav.mobile() + tpl[seg_end:]
+tpl = sub1('justify-content:space-between; padding:110px 28px 40px;',
+           'justify-content:flex-start; gap:32px; overflow-y:auto; overscroll-behavior:contain; padding:110px 28px 40px;', tpl)
+tpl = sub1('hint-size="auto,38px">Book a Consultation</x-import>', 'hint-size="auto,38px">%s</x-import>' % nav.APPOINTMENT, tpl)
+tpl = sub1('    ::selection {', nav.CSS.lstrip('\n') + '    ::selection {', tpl)
+# Every dropdown opens on hover and keyboard focus, not just the first.
+tpl = sub1("""    const dd = document.querySelector('[data-dd]');
+    const ddp = document.querySelector('[data-dd-panel]');
+    if (dd && ddp) {""", """    document.querySelectorAll('[data-dd]').forEach(dd => {
+      const ddp = dd.querySelector('[data-dd-panel]');
+      if (!ddp) return;""", tpl)
+tpl = sub1("""      dd.addEventListener('focusin', open); dd.addEventListener('focusout', close);
+    }""", """      dd.addEventListener('focusin', open); dd.addEventListener('focusout', close);
+    });""", tpl)
 
-MNAV = ('<a href="#%s" data-mnav-link="" style="font-family:var(--font-display); font-weight:500; font-size:1.9rem; '
-        'line-height:1.15; color:#F5F2EA; text-decoration:none">%s</a>\n        ')
-tpl = sub1('<a href="#about" data-mnav-link=""', MNAV % ('pillars', 'Treatments') + '<a href="#about" data-mnav-link=""', tpl)
+# "Our Philosophy" lands on The Institute statement.
+tpl = sub1('<section data-screen-label="The Institute"', '<section id="philosophy" data-screen-label="The Institute"', tpl)
 
 # Footer: a Patient Resources column carries the Fullscript dispensary link.
 tpl = sub1('grid-template-columns:1.4fr 1fr 1fr 1fr; gap:48px', 'grid-template-columns:1.4fr 1fr 1fr 1fr 1fr; gap:40px', tpl)
