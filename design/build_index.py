@@ -62,6 +62,10 @@ import pillars
 tpl = sub1('<!-- ============ SERVICES (pinned horizontal) ============ -->',
            pillars.render() + '  <!-- ============ SERVICES (pinned horizontal) ============ -->', tpl)
 
+# Pinned pillar steps: hook into the page's mount and scroll handler.
+tpl = sub1("    this.procIdx = 0;\n", "    this.procIdx = 0;\n" + pillars.JS_INIT, tpl)
+tpl = sub1("    // Pinned process steps\n", pillars.JS_SCROLL + "    // Pinned process steps\n", tpl)
+
 # Navigation (design/nav.py): About, the three pillars, Patient Resources and
 # the appointment button.
 import nav
