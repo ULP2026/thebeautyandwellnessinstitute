@@ -1,11 +1,37 @@
 {
   "cleanUrls": true,
   "trailingSlash": false,
-  "redirects": [],
+  "redirects": [
+    {
+      "source": "/TBWI-Home.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/TBWI-Aesthetics.html",
+      "destination": "/aesthetics",
+      "permanent": true
+    },
+    {
+      "source": "/TBWI-Medical-Wellness.html",
+      "destination": "/medical-wellness",
+      "permanent": true
+    },
+    {
+      "source": "/TBWI-Longevity.html",
+      "destination": "/longevity",
+      "permanent": true
+    }
+  ],
   "headers": [
     {
       "source": "/assets/(.*)",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
     }
   ]
 }
