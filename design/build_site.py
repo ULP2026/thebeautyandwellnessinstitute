@@ -97,6 +97,12 @@ def fix(tpl, name):
         sub('>Pending regulatory review</span>',
             '><!-- PENDING REGULATORY REVIEW -->Consultation required</span>')
 
+    # Map pin copy (shared page script; only the homepage shows the map).
+    for key, (eb, title, desc) in PINS.items():
+        tpl, n = re.subn(r"\b%s: \{ eb: '[^']*', title: '[^']*', desc: '[^']*' \}" % key,
+                         "%s: { eb: '%s', title: '%s', desc: '%s' }" % (key, eb, title, desc), tpl)
+        assert n == 1, (name, key)
+
     if name != 'TBWI-Home.html':
         # Phones: the shared "#top { min-height: 100svh }" is for the homepage
         # hero. On the inner pages it stretched the hero to a full screen, so
@@ -140,13 +146,17 @@ def fix(tpl, name):
         # Mobile process: the scale meant for decorative rings also shrank the
         # photo shade, leaving a grey box under the step counter.
         sub('      [data-rs="proc"] [data-media] > div:last-child { transform: scale(0.7); }\n', '', 1)
-        # Map: Palma Sola is on the mainland across the bay from Bradenton
-        # Beach, not south of it by Longboat Pass. Its label opens to the right,
-        # away from the island labels.
-        sub('data-area-key="palma" data-side="center" data-mside="center" role="button" tabindex="0" aria-label="Palma Sola" '
-            'style="position:absolute; left:29%; top:38%;',
-            'data-area-key="palma" data-side="right" data-mside="right" role="button" tabindex="0" aria-label="Palma Sola" '
-            'style="position:absolute; left:36.5%; top:39%;', 1)
+        # Map pins name only PMC service areas. The design's Palma Sola pin
+        # sits on the Cortez peninsula, so it becomes Cortez; the Northwest
+        # Bradenton pin, on the Manatee River, becomes Bradenton.
+        sub('aria-label="Palma Sola"', 'aria-label="Cortez"', 1)
+        sub('<span data-full="">Palma Sola</span><span data-short="" style="display:none">Palma Sola</span>',
+            '<span data-full="">Cortez</span><span data-short="" style="display:none">Cortez</span>', 1)
+        sub('aria-label="Northwest Bradenton"', 'aria-label="Bradenton"', 1)
+        sub('<span data-full="">Northwest Bradenton</span><span data-short="" style="display:none">NW Bradenton</span>',
+            '<span data-full="">Bradenton</span><span data-short="" style="display:none">Bradenton</span>', 1)
+        sub('alt="Map of Northwest Bradenton, Palma Sola, Anna Maria Island, and Longboat Key"',
+            'alt="Map of Bradenton, Anna Maria Island, Cortez, and Longboat Key"', 1)
         # Phones: the island labels piled onto each other and the clinic label.
         # Only the clinic and the tapped pin show a name; the rest show the pin.
         sub('      [data-area-map] { height: 250px !important; }\n',
@@ -207,27 +217,42 @@ def fix(tpl, name):
     foot = tpl.index('<footer')
     tail, n = re.subn(r'>Meet Pamela Chapman, DO, DABOM</a>', '>About &amp; Our Philosophy</a>', tpl[foot:])
     assert n == 1, (name, n)
-    # Footer communities: the PMC's primary service areas across Manatee and
-    # Sarasota counties, in place of the Northwest Bradenton neighborhoods.
-    old = ['Northwest Bradenton', 'Palma Sola &amp; Perico Island', 'Anna Maria &amp; Holmes Beach',
-           'Bradenton Beach &amp; Cortez', 'Longboat Key', 'Greater Bradenton &amp; Manatee County']
-    pat = ''.join(r'(<a href="[^"]*#areas"[^>]*>)%s</a>(\s*)' % re.escape(a) for a in old)
-    tail, n = re.subn(pat, lambda m: ''.join('%s%s</a>%s' % (m.group(2 * i + 1), b, m.group(2 * i + 2))
-                                             for i, b in enumerate(AREAS)), tail, count=1)
-    assert n == 1, name
+    # Footer "Communities Served": the PMC's service areas, by county.
+    m = re.search(r'(>Communities Served</div>\s*)<div style="display:flex; flex-direction:column; gap:13px">'
+                  r'\s*<a href="([^"]*#areas)" (style="[^"]*" style-hover="[^"]*")>.*?</div>', tail, re.S)
+    assert m, name
+    groups = ''.join(
+        '\n          <div>\n            <a href="%s" %s>%s</a>\n'
+        '            <p style="margin:6px 0 0; max-width:250px; font-weight:300; font-size:0.82rem; line-height:1.6; '
+        'color:rgba(236,240,238,0.55)">%s</p>\n          </div>' % (m.group(2), m.group(3), county, ', '.join(places))
+        for county, places in SERVICE_AREAS)
+    tail = (tail[:m.start()] + m.group(1) + '<div style="display:flex; flex-direction:column; gap:18px">'
+            + groups + '\n        </div>' + tail[m.end():])
     tpl = tpl[:foot] + tail
 
     if name == 'TBWI-Home.html':
-        # Service areas copy follows the PMC's two-county list. The map still
-        # shows the practice's neighborhood and the islands.
-        sub('with patients visiting from across Greater Bradenton and Manatee County.',
-            'with patients visiting from across Manatee and Sarasota counties.', 1)
+        # Service areas section, FAQ and reviews heading follow the PMC's
+        # two-county list instead of Northwest Bradenton and the islands.
+        sub('>Serving Northwest Bradenton and Anna Maria Island</h2>', '>Serving Manatee and Sarasota Counties</h2>', 1)
+        intro = re.search(r'(<p data-sec-intro="" style="margin:14px 0 0; max-width:540px;[^"]*">)'
+                          r'Our practice on Manatee Avenue West is minutes from Palma Sola[^<]*</p>', tpl)
+        assert intro, name
+        tpl = tpl.replace(intro.group(0), intro.group(1) + (
+            'Our practice on Manatee Avenue West in Bradenton welcomes patients from across both counties.</p>'
+            '\n        <div data-area-list="" style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px 40px; '
+            'max-width:760px; margin:20px auto 0">%s\n        </div>' % ''.join(
+                '\n          <p style="margin:0; max-width:420px; font-weight:300; font-size:0.92rem; line-height:1.6; '
+                'color:rgba(236,240,238,0.62)"><span style="display:block; font-weight:500; font-size:11.5px; '
+                'letter-spacing:0.22em; text-transform:uppercase; color:var(--sage-300); margin-bottom:4px">%s</span>%s</p>'
+                % (county, ', '.join(places)) for county, places in SERVICE_AREAS)), 1)
         sub('Our practice is at 6114 Manatee Ave W in Northwest Bradenton, close to Palma Sola, Perico Island, '
             'Anna Maria, Holmes Beach, and Bradenton Beach. We also welcome patients from Cortez, Longboat Key, '
             'and across Manatee County.',
-            'Our practice is at 6114 Manatee Ave W in Northwest Bradenton, close to Anna Maria, Holmes Beach, '
-            'Bradenton Beach, and Cortez. We welcome patients from across Manatee and Sarasota counties, including '
-            'Palmetto, Parrish, Ellenton, Lakewood Ranch, Myakka City, Longboat Key, Sarasota, Venice, and North Port.', 1)
+            'Our practice is at 6114 Manatee Ave W in Bradenton. We serve patients across Manatee County (%s) '
+            'and Sarasota County (%s).' % (series(SERVICE_AREAS[0][1]), series(SERVICE_AREAS[1][1])), 1)
+        sub('<em>across Bradenton and the islands</em>', '<em>across Manatee and Sarasota counties</em>', 1)
+        for gone in ('Palma Sola', 'Perico', 'Greater Bradenton', 'Northwest Bradenton and'):
+            assert gone not in tpl, (name, gone)
         # "Med spa" is the PMC's spelling and how patients search.
         sub('>More than a medspa<', '>More than a med spa<', 1)
         sub('<span data-rw="">medspa.</span>', '<span data-rw="">med </span><span data-rw="">spa.</span>', 1)
@@ -236,9 +261,27 @@ def fix(tpl, name):
     return tpl
 
 
-# Footer "Communities Served", grouped from the PMC's primary service areas.
-AREAS = ['Bradenton &amp; Palmetto', 'Anna Maria &amp; Holmes Beach', 'Bradenton Beach &amp; Cortez',
-         'Longboat Key &amp; Lakewood Ranch', 'Parrish, Ellenton &amp; Myakka City', 'Sarasota, Venice &amp; North Port']
+# Primary service areas, exactly as listed in the PMC (Longboat Key spans
+# both counties).
+SERVICE_AREAS = [
+    ('Manatee County', ['Anna Maria', 'Bradenton', 'Bradenton Beach', 'Cortez', 'Ellenton', 'Holmes Beach',
+                        'Lakewood Ranch', 'Longboat Key', 'Myakka City', 'Palmetto', 'Parrish']),
+    ('Sarasota County', ['Sarasota', 'Venice', 'North Port', 'Longboat Key']),
+]
+
+# Homepage map pins: (eyebrow, title, description) by pin key.
+PINS = {
+    'ami': ('Manatee County', 'Anna Maria', 'At the north end of Anna Maria Island, a short drive over the Manatee Avenue bridge.'),
+    'holmes': ('Manatee County', 'Holmes Beach', 'On Anna Maria Island, minutes from the clinic across the Manatee Avenue bridge.'),
+    'bbeach': ('Manatee County', 'Bradenton Beach', 'At the south end of Anna Maria Island, an easy drive up to Manatee Avenue West.'),
+    'palma': ('Manatee County', 'Cortez', 'The historic fishing village by the Cortez Bridge, a short drive from the clinic.'),
+    'nwb': ('Manatee County', 'Bradenton', 'Home to our practice on Manatee Avenue West.'),
+    'lbk': ('Manatee & Sarasota Counties', 'Longboat Key', 'A scenic drive north along Gulf of Mexico Drive.'),
+}
+
+
+def series(xs):
+    return ', '.join(xs[:-1]) + ', and ' + xs[-1]
 
 
 from html import escape as e
