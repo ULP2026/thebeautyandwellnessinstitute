@@ -25,8 +25,8 @@ PAGES = {
 }
 
 # Appointment requests go to the practice's Jotform. Some exports still carry
-# a placeholder for it. Fullscript goes to the Fullscript home page, where
-# patients can sign in, until the dispensary link arrives.
+# a placeholder for it. Fullscript links are taken off the pages until the
+# practice's dispensary link arrives.
 JOTFORM_URL = 'https://form.jotform.com/251495476973069'
 FULLSCRIPT_URL = 'https://fullscript.com/'
 
@@ -53,6 +53,10 @@ def fix(tpl, name):
     assert re.search(r'href="/privacy-policy"[^>]*>Privacy Policy</a>', tpl) and \
         re.search(r'href="/medical-disclaimer"[^>]*>Medical Disclaimer</a>', tpl), name
     sub('https://us.fullscript.com/welcome/YOUR-DISPENSARY', FULLSCRIPT_URL)
+    # Footer: the Fullscript link stays hidden until the practice's own
+    # dispensary link arrives (the online shop is "coming soon").
+    tpl, n = re.subn(r'\n[ \t]*<a href="%s"[^>]*>Fullscript Supplement Dispensary</a>' % re.escape(FULLSCRIPT_URL), '', tpl)
+    assert n == 1, (name, 'fullscript', n)
     assert 'TBWI-' not in re.sub(r'<title>.*?</title>', '', tpl).replace('TBWI-logo', ''), name
 
     # Name style: "Dr." and "DO" together double up the title, so the
@@ -73,12 +77,16 @@ def fix(tpl, name):
     sub('[data-header-inner] > div:last-child > a[href="#book"] { display: none !important; }',
         '[data-header-inner] > div:last-child > a:last-child { display: none !important; }', 1)
 
-    # Footer: no SRQ badge (it scrolls in the homepage logo strip) and no
-    # short disclaimer paragraph (the Medical Disclaimer page covers it).
-    tpl, n = re.subn(r'\n[ \t]*<div style="display:flex; align-items:center; gap:12px; margin-top:22px">\s*'
-                     r'<span[^>]*><img[^>]*alt="2026 SRQ Top Doctors, Peer Review"[^>]*></span>\s*'
-                     r'<span[^>]*>Peer-Selected 2026 SRQ Top Doctor, Family Medicine</span>\s*</div>', '', tpl)
+    # Footer SRQ badge: no white tile. A single-colour render in the footer
+    # link colour (#ECF0EE at the links' 0.72 opacity) sits straight on the
+    # dark footer.
+    badge = asset(os.path.join(ROOT, 'design', 'logos', 'srq-2026-footer.png'))
+    tpl, n = re.subn(r'<span style="display:inline-flex; padding:7px 9px; border-radius:10px; background:#FFFFFF">'
+                     r'<img src="[^"]*" alt="2026 SRQ Top Doctors, Peer Review" style="height:38px; width:auto; display:block"></span>',
+                     '<img src="%s" alt="2026 SRQ Top Doctors, Peer Review" width="117" height="40" '
+                     'style="height:40px; width:auto; display:block; flex-shrink:0; opacity:0.72">' % badge, tpl)
     assert n == 1, (name, 'badge', n)
+    # Footer: no short disclaimer paragraph (the Medical Disclaimer page covers it).
     tpl, n = re.subn(r'\n[ \t]*<p id="medical-disclaimer"[^>]*><strong[^>]*>Medical disclaimer\.</strong>[^<]*</p>', '', tpl)
     assert n == 1, (name, 'disclaimer', n)
 
