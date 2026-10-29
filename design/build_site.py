@@ -103,6 +103,26 @@ def fix(tpl, name):
         sub('Each option is selected and placed by a physician, with results that look like you.',
             'Every treatment plan is designed by a physician, with results that look like you.', 1)
 
+    if name == 'TBWI-Longevity.html':
+        # Patient Resources: the online shop isn't open yet, so the button
+        # goes to the contact details in the footer, with a "coming soon"
+        # tag beside it (it wraps below the button on narrow screens).
+        sub('          <div style="margin-top:28px">\n'
+            '            <a href="%s" target="_blank" rel="noopener" style="text-decoration:none">\n'
+            '              <x-import component-from-global-scope="TBWIDesignSystem_4a5da9.Button" variant="gold" size="md" hint-size="auto,44px">Shop Professional-Grade Supplements</x-import>\n'
+            '            </a>\n'
+            '          </div>\n' % FULLSCRIPT_URL,
+            '          <div style="margin-top:28px; display:flex; flex-wrap:wrap; align-items:center; gap:14px 18px">\n'
+            '            <a href="#contact" style="text-decoration:none">\n'
+            '              <x-import component-from-global-scope="TBWIDesignSystem_4a5da9.Button" variant="gold" size="md" hint-size="auto,44px">Contact Us</x-import>\n'
+            '            </a>\n'
+            '            <span style="display:inline-flex; align-items:center; gap:9px; max-width:100%; padding:10px 16px; border-radius:999px; '
+            'background:rgba(247,244,237,0.08); border:1px solid rgba(247,244,237,0.22)">'
+            '<i data-lucide="shopping-bag" style="width:15px; height:15px; flex-shrink:0; color:var(--gold-300)"></i>'
+            '<span style="font-weight:500; font-size:11px; line-height:1.4; letter-spacing:0.14em; text-transform:uppercase; '
+            'color:rgba(247,244,237,0.9)">Online Shop Coming Soon</span></span>\n'
+            '          </div>\n', 1)
+
     if name == 'TBWI-Home.html':
         # Pins respond to tap as well as hover.
         sub('Hover a pin to see', 'Hover or tap a pin to see', 2)
