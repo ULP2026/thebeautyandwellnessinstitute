@@ -199,8 +199,38 @@ def fix(tpl, name):
     foot = tpl.index('<footer')
     tail, n = re.subn(r'>Meet Pamela Chapman, DO, DABOM</a>', '>About &amp; Our Philosophy</a>', tpl[foot:])
     assert n == 1, (name, n)
+    # Footer communities: the PMC's primary service areas across Manatee and
+    # Sarasota counties, in place of the Northwest Bradenton neighborhoods.
+    old = ['Northwest Bradenton', 'Palma Sola &amp; Perico Island', 'Anna Maria &amp; Holmes Beach',
+           'Bradenton Beach &amp; Cortez', 'Longboat Key', 'Greater Bradenton &amp; Manatee County']
+    pat = ''.join(r'(<a href="[^"]*#areas"[^>]*>)%s</a>(\s*)' % re.escape(a) for a in old)
+    tail, n = re.subn(pat, lambda m: ''.join('%s%s</a>%s' % (m.group(2 * i + 1), b, m.group(2 * i + 2))
+                                             for i, b in enumerate(AREAS)), tail, count=1)
+    assert n == 1, name
     tpl = tpl[:foot] + tail
+
+    if name == 'TBWI-Home.html':
+        # Service areas copy follows the PMC's two-county list. The map still
+        # shows the practice's neighborhood and the islands.
+        sub('with patients visiting from across Greater Bradenton and Manatee County.',
+            'with patients visiting from across Manatee and Sarasota counties.', 1)
+        sub('Our practice is at 6114 Manatee Ave W in Northwest Bradenton, close to Palma Sola, Perico Island, '
+            'Anna Maria, Holmes Beach, and Bradenton Beach. We also welcome patients from Cortez, Longboat Key, '
+            'and across Manatee County.',
+            'Our practice is at 6114 Manatee Ave W in Northwest Bradenton, close to Anna Maria, Holmes Beach, '
+            'Bradenton Beach, and Cortez. We welcome patients from across Manatee and Sarasota counties, including '
+            'Palmetto, Parrish, Ellenton, Lakewood Ranch, Myakka City, Longboat Key, Sarasota, Venice, and North Port.', 1)
+        # "Med spa" is the PMC's spelling and how patients search.
+        sub('>More than a medspa<', '>More than a med spa<', 1)
+        sub('<span data-rw="">medspa.</span>', '<span data-rw="">med </span><span data-rw="">spa.</span>', 1)
+        sub('How is TBWI different from a medspa?', 'How is TBWI different from a med spa?', 1)
+        assert 'medspa' not in tpl, name
     return tpl
+
+
+# Footer "Communities Served", grouped from the PMC's primary service areas.
+AREAS = ['Bradenton &amp; Palmetto', 'Anna Maria &amp; Holmes Beach', 'Bradenton Beach &amp; Cortez',
+         'Longboat Key &amp; Lakewood Ranch', 'Parrish, Ellenton &amp; Myakka City', 'Sarasota, Venice &amp; North Port']
 
 
 from html import escape as e
