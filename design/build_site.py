@@ -25,8 +25,8 @@ PAGES = {
 }
 
 # Appointment requests go to the practice's Jotform. Some exports still carry
-# a placeholder for it. Fullscript goes to the Fullscript home page, where
-# patients can sign in, until the dispensary link arrives.
+# a placeholder for it. Fullscript links are taken off the pages until the
+# practice's dispensary link arrives.
 JOTFORM_URL = 'https://form.jotform.com/251495476973069'
 FULLSCRIPT_URL = 'https://fullscript.com/'
 
@@ -53,6 +53,10 @@ def fix(tpl, name):
     assert re.search(r'href="/privacy-policy"[^>]*>Privacy Policy</a>', tpl) and \
         re.search(r'href="/medical-disclaimer"[^>]*>Medical Disclaimer</a>', tpl), name
     sub('https://us.fullscript.com/welcome/YOUR-DISPENSARY', FULLSCRIPT_URL)
+    # Footer: the Fullscript link stays hidden until the practice's own
+    # dispensary link arrives (the online shop is "coming soon").
+    tpl, n = re.subn(r'\n[ \t]*<a href="%s"[^>]*>Fullscript Supplement Dispensary</a>' % re.escape(FULLSCRIPT_URL), '', tpl)
+    assert n == 1, (name, 'fullscript', n)
     assert 'TBWI-' not in re.sub(r'<title>.*?</title>', '', tpl).replace('TBWI-logo', ''), name
 
     # Name style: "Dr." and "DO" together double up the title, so the
@@ -73,12 +77,16 @@ def fix(tpl, name):
     sub('[data-header-inner] > div:last-child > a[href="#book"] { display: none !important; }',
         '[data-header-inner] > div:last-child > a:last-child { display: none !important; }', 1)
 
-    # Footer: no SRQ badge (it scrolls in the homepage logo strip) and no
-    # short disclaimer paragraph (the Medical Disclaimer page covers it).
-    tpl, n = re.subn(r'\n[ \t]*<div style="display:flex; align-items:center; gap:12px; margin-top:22px">\s*'
-                     r'<span[^>]*><img[^>]*alt="2026 SRQ Top Doctors, Peer Review"[^>]*></span>\s*'
-                     r'<span[^>]*>Peer-Selected 2026 SRQ Top Doctor, Family Medicine</span>\s*</div>', '', tpl)
+    # Footer SRQ badge: no white tile. A single-colour render in the footer
+    # link colour (#ECF0EE at the links' 0.72 opacity) sits straight on the
+    # dark footer.
+    badge = asset(os.path.join(ROOT, 'design', 'logos', 'srq-2026-footer.png'))
+    tpl, n = re.subn(r'<span style="display:inline-flex; padding:7px 9px; border-radius:10px; background:#FFFFFF">'
+                     r'<img src="[^"]*" alt="2026 SRQ Top Doctors, Peer Review" style="height:38px; width:auto; display:block"></span>',
+                     '<img src="%s" alt="2026 SRQ Top Doctors, Peer Review" width="117" height="40" '
+                     'style="height:40px; width:auto; display:block; flex-shrink:0; opacity:0.72">' % badge, tpl)
     assert n == 1, (name, 'badge', n)
+    # Footer: no short disclaimer paragraph (the Medical Disclaimer page covers it).
     tpl, n = re.subn(r'\n[ \t]*<p id="medical-disclaimer"[^>]*><strong[^>]*>Medical disclaimer\.</strong>[^<]*</p>', '', tpl)
     assert n == 1, (name, 'disclaimer', n)
 
@@ -199,8 +207,38 @@ def fix(tpl, name):
     foot = tpl.index('<footer')
     tail, n = re.subn(r'>Meet Pamela Chapman, DO, DABOM</a>', '>About &amp; Our Philosophy</a>', tpl[foot:])
     assert n == 1, (name, n)
+    # Footer communities: the PMC's primary service areas across Manatee and
+    # Sarasota counties, in place of the Northwest Bradenton neighborhoods.
+    old = ['Northwest Bradenton', 'Palma Sola &amp; Perico Island', 'Anna Maria &amp; Holmes Beach',
+           'Bradenton Beach &amp; Cortez', 'Longboat Key', 'Greater Bradenton &amp; Manatee County']
+    pat = ''.join(r'(<a href="[^"]*#areas"[^>]*>)%s</a>(\s*)' % re.escape(a) for a in old)
+    tail, n = re.subn(pat, lambda m: ''.join('%s%s</a>%s' % (m.group(2 * i + 1), b, m.group(2 * i + 2))
+                                             for i, b in enumerate(AREAS)), tail, count=1)
+    assert n == 1, name
     tpl = tpl[:foot] + tail
+
+    if name == 'TBWI-Home.html':
+        # Service areas copy follows the PMC's two-county list. The map still
+        # shows the practice's neighborhood and the islands.
+        sub('with patients visiting from across Greater Bradenton and Manatee County.',
+            'with patients visiting from across Manatee and Sarasota counties.', 1)
+        sub('Our practice is at 6114 Manatee Ave W in Northwest Bradenton, close to Palma Sola, Perico Island, '
+            'Anna Maria, Holmes Beach, and Bradenton Beach. We also welcome patients from Cortez, Longboat Key, '
+            'and across Manatee County.',
+            'Our practice is at 6114 Manatee Ave W in Northwest Bradenton, close to Anna Maria, Holmes Beach, '
+            'Bradenton Beach, and Cortez. We welcome patients from across Manatee and Sarasota counties, including '
+            'Palmetto, Parrish, Ellenton, Lakewood Ranch, Myakka City, Longboat Key, Sarasota, Venice, and North Port.', 1)
+        # "Med spa" is the PMC's spelling and how patients search.
+        sub('>More than a medspa<', '>More than a med spa<', 1)
+        sub('<span data-rw="">medspa.</span>', '<span data-rw="">med </span><span data-rw="">spa.</span>', 1)
+        sub('How is TBWI different from a medspa?', 'How is TBWI different from a med spa?', 1)
+        assert 'medspa' not in tpl, name
     return tpl
+
+
+# Footer "Communities Served", grouped from the PMC's primary service areas.
+AREAS = ['Bradenton &amp; Palmetto', 'Anna Maria &amp; Holmes Beach', 'Bradenton Beach &amp; Cortez',
+         'Longboat Key &amp; Lakewood Ranch', 'Parrish, Ellenton &amp; Myakka City', 'Sarasota, Venice &amp; North Port']
 
 
 from html import escape as e
