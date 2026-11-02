@@ -118,24 +118,35 @@ def fix(tpl, name):
             'Every treatment plan is designed by a physician, with results that look like you.', 1)
 
     if name == 'TBWI-Longevity.html':
-        # Patient Resources: the online shop isn't open yet, so the button
-        # goes to the contact details in the footer, with a "coming soon"
-        # tag beside it (it wraps below the button on narrow screens).
+        # Patient Resources: no Fullscript. The practice is building its own
+        # shop, so the button goes to the contact details in the footer and
+        # the card that named Fullscript announces the online shop instead.
+        sub('Explore professional-grade nutritional supplements through our Fullscript dispensary. ',
+            'Explore professional-grade nutritional supplements. ', 1)
         sub('          <div style="margin-top:28px">\n'
             '            <a href="%s" target="_blank" rel="noopener" style="text-decoration:none">\n'
             '              <x-import component-from-global-scope="TBWIDesignSystem_4a5da9.Button" variant="gold" size="md" hint-size="auto,44px">Shop Professional-Grade Supplements</x-import>\n'
             '            </a>\n'
             '          </div>\n' % FULLSCRIPT_URL,
-            '          <div style="margin-top:28px; display:flex; flex-wrap:wrap; align-items:center; gap:14px 18px">\n'
+            '          <div style="margin-top:28px">\n'
             '            <a href="#contact" style="text-decoration:none">\n'
             '              <x-import component-from-global-scope="TBWIDesignSystem_4a5da9.Button" variant="gold" size="md" hint-size="auto,44px">Contact Us</x-import>\n'
             '            </a>\n'
-            '            <span style="display:inline-flex; align-items:center; gap:9px; max-width:100%; padding:10px 16px; border-radius:999px; '
-            'background:rgba(247,244,237,0.08); border:1px solid rgba(247,244,237,0.22)">'
-            '<i data-lucide="shopping-bag" style="width:15px; height:15px; flex-shrink:0; color:var(--gold-300)"></i>'
-            '<span style="font-weight:500; font-size:11px; line-height:1.4; letter-spacing:0.14em; text-transform:uppercase; '
-            'color:rgba(247,244,237,0.9)">Online Shop Coming Soon</span></span>\n'
             '          </div>\n', 1)
+        sub('<span style="font-family:var(--font-display); font-weight:600; font-size:2rem; line-height:1; color:var(--ink-900)">Fullscript</span>',
+            '<span style="font-family:var(--font-display); font-weight:600; font-size:clamp(2.1rem,3vw,2.6rem); line-height:1.02; '
+            'color:var(--ink-900)">Online Shop <em style="display:block; font-weight:500; color:var(--teal-700)">Coming Soon</em></span>', 1)
+        sub('<i data-lucide="pill" style="width:19px; height:19px"></i>',
+            '<i data-lucide="shopping-bag" style="width:19px; height:19px"></i>', 1)
+        sub('<div style="display:flex; align-items:center; justify-content:space-between; gap:12px">\n'
+            '            <span style="font-family:var(--font-display)',
+            '<div style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px">\n'
+            '            <span style="font-family:var(--font-display)', 1)
+        sub('>Supplement Dispensary for TBWI patients</p>',
+            '>Our own supplement shop for TBWI patients is on the way. Until it opens, contact us and we\'ll help you get what you need.</p>', 1)
+        sub('<p style="margin:10px 0 0; font-weight:400; font-size:0.92rem; line-height:1.55; color:var(--ink-700)">Our own',
+            '<p style="margin:14px 0 0; font-weight:400; font-size:0.92rem; line-height:1.55; color:var(--ink-700)">Our own', 1)
+        assert 'fullscript' not in tpl.lower(), name
 
     if name == 'TBWI-Home.html':
         # Pins respond to tap as well as hover.
