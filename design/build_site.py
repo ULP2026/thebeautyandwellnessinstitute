@@ -190,6 +190,37 @@ def fix(tpl, name):
         sub('      [data-marq-wrap] { margin-top: 44px !important; }\n',
             '      [data-marq-wrap] { margin-top: 44px !important; --logo-scale: 0.72; }\n', 1)
 
+        # "What to Expect" photos: alt text that says what each photo shows
+        # (they were empty). The photos don't match their step titles one to
+        # one, so the text follows the picture, not the step.
+        a = tpl.index('<section id="process"')
+        b = tpl.index('</section>', a)
+        part = tpl[a:b]
+        for uuid, alt in [
+            ('99df870f-31ec-46e4-9df8-9f710e977866', 'One-on-one consultation with Pamela Chapman, DO, DABOM'),
+            ('cef16250-e8bb-498c-be9f-c38e5ed1e203', 'TBWI team member taking notes beside lab samples'),
+            ('191661ed-679f-4809-9d12-ef0b5a6f444b', 'Personalized wellness plan reviewed with a patient at TBWI'),
+            ('394537cf-ce1d-448f-a691-5f3408460642', 'Provider preparing a patient for an aesthetic treatment at TBWI'),
+        ]:
+            old = 'src="%s" alt=""' % uuid
+            assert part.count(old) == 1, (name, uuid)
+            part = part.replace(old, 'src="%s" alt="%s"' % (uuid, alt))
+        assert 'alt=""' not in part, name
+        tpl = tpl[:a] + part + tpl[b:]
+
+        # Hero, desktop only: a soft dark shade behind the headline block so
+        # the text reads over bright frames of the video. It sits inside the
+        # copy's stacking context (under the text, over the video) and fades
+        # out at the edges, so the rest of the image keeps its brightness.
+        sub('    #top[data-loading] [data-hero-copy] *,',
+            '    @media (min-width: 769px) {\n'
+            '      [data-hero-copy]::before { content: ""; position: absolute; z-index: -1; pointer-events: none; '
+            'left: 50%; top: calc(47vh - 110px); bottom: -90px; width: min(1300px, 100vw); transform: translateX(-50%); '
+            'background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(20,27,23,0.50) 0%, rgba(20,27,23,0.34) 40%, '
+            'rgba(20,27,23,0.12) 70%, rgba(20,27,23,0) 100%); }\n'
+            '    }\n'
+            '    #top[data-loading] [data-hero-copy] *,', 1)
+
     if name == 'TBWI-Home.html':
         # Reviews: the four real patient reviews in place of the design's
         # placeholder testimonials. Wording is verbatim apart from one typo
