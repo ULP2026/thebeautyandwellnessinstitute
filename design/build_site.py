@@ -32,16 +32,17 @@ JOTFORM_URL = 'https://form.jotform.com/251495476973069'
 FULLSCRIPT_URL = 'https://fullscript.com/'
 
 SURVEY_ID = 'bphxdsu2vMaIhYQsSrMC'
-# LeadConnector survey embed. form_embed.js sizes the iframe to the survey
-# as each step loads; the min-height holds the space until it does.
+# LeadConnector survey embed. The survey draws its own card, so it sits
+# straight on the section with no card of ours behind it. form_embed.js sizes
+# the iframe to each step; the starting height is close to the first step's.
+# The survey keeps about 60px of empty space under its card, so the call line
+# below is pulled up into it.
 SURVEY_HTML = (
-    '      <div data-survey="" style="width:100%; max-width:680px; margin-top:34px; border-radius:var(--radius-lg, 18px); '
-    'overflow:hidden; background:#FBFAF6; box-shadow:0 24px 60px rgba(0,0,0,0.28)">\n'
+    '      <div data-survey="" style="width:100%; max-width:680px; margin-top:28px">\n'
     '        <iframe src="https://api.leadconnectorhq.com/widget/survey/SURVEY_ID" id="SURVEY_ID" title="Start your wellness journey survey" '
-    'scrolling="no" loading="lazy" style="display:block; border:none; width:100%; min-height:560px"></iframe>\n'
+    'scrolling="no" style="display:block; border:none; width:100%; height:370px; background:transparent"></iframe>\n'
     '      </div>\n'
-    '      <script src="https://link.msgsndr.com/js/form_embed.js"></script>\n'
-    '      <p style="margin:22px 0 0; font-weight:300; font-size:0.95rem; color:rgba(247,244,237,0.78)">Prefer to talk? '
+    '      <p style="position:relative; margin:-34px 0 0; font-weight:300; font-size:0.95rem; color:rgba(247,244,237,0.78)">Prefer to talk? '
     'Call <a href="tel:9415547546" style="color:var(--gold-300); font-weight:500; text-decoration:none; white-space:nowrap">'
     '941-554-7546</a></p>\n'
 ).replace('SURVEY_ID', SURVEY_ID)
@@ -78,6 +79,24 @@ def fix(tpl, name):
                              'Answer a few short questions and a member of our team will personally reach out')
                          + SURVEY_HTML, tpl, count=1, flags=re.S)
         assert n == 1, (name, 'survey')
+        # A <script> inside the section is left inert when the page renders,
+        # so the page script loads form_embed.js once the survey is on the page.
+        sub('  componentDidMount() {\n    this.timers = [];\n',
+            '  componentDidMount() {\n    this.timers = [];\n'
+            "    if (!window.__tbwiSurveyEmbed) {\n"
+            "      window.__tbwiSurveyEmbed = true;\n"
+            "      setTimeout(() => { const s = document.createElement('script'); "
+            "s.src = 'https://link.msgsndr.com/js/form_embed.js'; s.async = true; document.body.appendChild(s); }, 0);\n"
+            "    }\n", 1)
+        # Less room under the survey: the section's bottom padding drops from
+        # 110px to 72px. The phone rules held the iframe at 440px and pushed
+        # the last line down 28px; the survey sets its own height now.
+        sub('max-width:820px; padding:110px 40px;', 'max-width:820px; padding:110px 40px 72px;', 1)
+        tpl = tpl.replace('#book iframe { min-height: 440px !important; }', '#book iframe { min-height: 0 !important; }')
+        tpl = tpl.replace('#book > div[data-reveal] > div:last-child { margin-top: 28px !important; }',
+                          '#book > div[data-reveal] > [data-survey] { margin-top: 24px !important; }')
+        tpl = tpl.replace('#book > div[data-reveal] { padding: 56px 20px !important; }',
+                          '#book > div[data-reveal] { padding: 56px 20px 44px !important; }')
     # Footer legal links: older exports pointed them at the footer itself.
     tpl = re.sub(r'<a href="#contact"( style="[^"]*">Privacy Policy</a>)', r'<a href="/privacy-policy"\1', tpl)
     tpl = re.sub(r'<a href="#medical-disclaimer"( style="[^"]*">Medical Disclaimer</a>)', r'<a href="/medical-disclaimer"\1', tpl)
