@@ -24,11 +24,27 @@ PAGES = {
     'TBWI-Medical-Disclaimer.html': ('medical-disclaimer.html', '/medical-disclaimer'),
 }
 
-# Appointment requests go to the practice's Jotform. Some exports still carry
-# a placeholder for it. Fullscript links are taken off the pages until the
-# practice's dispensary link arrives.
+# Appointment requests used to go to the practice's Jotform; they now go to
+# the survey in each page's "Start your wellness journey" section.
+# Fullscript links are taken off the pages until the practice's dispensary
+# link arrives.
 JOTFORM_URL = 'https://form.jotform.com/251495476973069'
 FULLSCRIPT_URL = 'https://fullscript.com/'
+
+SURVEY_ID = 'bphxdsu2vMaIhYQsSrMC'
+# LeadConnector survey embed. form_embed.js sizes the iframe to the survey
+# as each step loads; the min-height holds the space until it does.
+SURVEY_HTML = (
+    '      <div data-survey="" style="width:100%; max-width:680px; margin-top:34px; border-radius:var(--radius-lg, 18px); '
+    'overflow:hidden; background:#FBFAF6; box-shadow:0 24px 60px rgba(0,0,0,0.28)">\n'
+    '        <iframe src="https://api.leadconnectorhq.com/widget/survey/SURVEY_ID" id="SURVEY_ID" title="Start your wellness journey survey" '
+    'scrolling="no" loading="lazy" style="display:block; border:none; width:100%; min-height:560px"></iframe>\n'
+    '      </div>\n'
+    '      <script src="https://link.msgsndr.com/js/form_embed.js"></script>\n'
+    '      <p style="margin:22px 0 0; font-weight:300; font-size:0.95rem; color:rgba(247,244,237,0.78)">Prefer to talk? '
+    'Call <a href="tel:9415547546" style="color:var(--gold-300); font-weight:500; text-decoration:none; white-space:nowrap">'
+    '941-554-7546</a></p>\n'
+).replace('SURVEY_ID', SURVEY_ID)
 
 DESC_RE = re.compile(r'<meta name="description" content="([^"]*)">')
 
@@ -45,8 +61,23 @@ def fix(tpl, name):
     for src, (_, url) in PAGES.items():
         tpl = tpl.replace('href="%s#' % src, 'href="%s#' % url.rstrip('/') if url != '/' else 'href="/#')
         tpl = tpl.replace('href="%s"' % src, 'href="%s"' % url)
-    tpl = tpl.replace('https://form.jotform.com/YOUR-FORM-ID', JOTFORM_URL)
-    assert JOTFORM_URL in tpl, name
+    # Appointment CTAs: every one goes to the "Start your wellness journey"
+    # survey section, on this page when it has one, otherwise on the homepage.
+    has_book = '<section id="book"' in tpl
+    book = '#book' if has_book else '/#book'
+    tpl, n = re.subn(r'href="https://form\.jotform\.com/(?:YOUR-FORM-ID|%s)" target="_blank" rel="noopener"'
+                     % re.escape(JOTFORM_URL.rsplit('/', 1)[1]), 'href="%s"' % book, tpl)
+    assert n >= 3 and 'jotform' not in tpl, (name, n)
+    if has_book:
+        # The section embeds the survey in place of its two buttons.
+        tpl, n = re.subn(r'(<section id="book" [^>]*>.*?)\n      <div style="display:flex; justify-content:center; '
+                         r'align-items:center; flex-wrap:wrap; gap:14px; margin-top:34px">.*?Start Your Wellness '
+                         r'Journey</x-import>\n        </a>\n      </div>\n',
+                         lambda m: m.group(1).replace(
+                             'Submit a brief inquiry and a member of our team will personally reach out',
+                             'Answer a few short questions and a member of our team will personally reach out')
+                         + SURVEY_HTML, tpl, count=1, flags=re.S)
+        assert n == 1, (name, 'survey')
     # Footer legal links: older exports pointed them at the footer itself.
     tpl = re.sub(r'<a href="#contact"( style="[^"]*">Privacy Policy</a>)', r'<a href="/privacy-policy"\1', tpl)
     tpl = re.sub(r'<a href="#medical-disclaimer"( style="[^"]*">Medical Disclaimer</a>)', r'<a href="/medical-disclaimer"\1', tpl)
