@@ -357,6 +357,9 @@ def fix(tpl, name):
     return tpl
 
 
+HOME_URL = 'https://thebeautyandwellnessinstitute.vercel.app/'
+
+
 def fix_thank_you(tpl):
     """The survey's confirmation page: no header or footer, so only its own fixes."""
     def sub(old, new, count):
@@ -364,8 +367,8 @@ def fix_thank_you(tpl):
         assert tpl.count(old) == count, ('thank-you', old[:60], tpl.count(old))
         tpl = tpl.replace(old, new)
 
-    # The logo and the "Back to home" button go to the homepage.
-    sub('href="TBWI-Home.html"', 'href="/"', 2)
+    # The logo and the "Back to home" button go to the live homepage.
+    sub('href="TBWI-Home.html"', 'href="%s"' % HOME_URL, 2)
     assert 'TBWI-' not in re.sub(r'<title>.*?</title>', '', tpl), 'thank-you links'
     # head() needs a description; the page stays out of search (noindex).
     sub('<meta name="robots" content="noindex">',
