@@ -22,6 +22,7 @@ PAGES = {
     'TBWI-Longevity.html': ('longevity.html', '/longevity'),
     'TBWI-Privacy-Policy.html': ('privacy-policy.html', '/privacy-policy'),
     'TBWI-Medical-Disclaimer.html': ('medical-disclaimer.html', '/medical-disclaimer'),
+    'TBWI-Thank-You.html': ('thank-you.html', '/thank-you'),
 }
 
 # Appointment requests used to go to the practice's Jotform; they now go to
@@ -57,6 +58,9 @@ def fix(tpl, name):
         n = tpl.count(old)
         assert n and (count is None or n == count), (name, old[:60], n)
         tpl = tpl.replace(old, new)
+
+    if name == 'TBWI-Thank-You.html':
+        return fix_thank_you(tpl)
 
     # Links between pages and placeholder links.
     for src, (_, url) in PAGES.items():
@@ -350,6 +354,59 @@ def fix(tpl, name):
         sub('<span data-rw="">medspa.</span>', '<span data-rw="">med </span><span data-rw="">spa.</span>', 1)
         sub('How is TBWI different from a medspa?', 'How is TBWI different from a med spa?', 1)
         assert 'medspa' not in tpl, name
+    return tpl
+
+
+def fix_thank_you(tpl):
+    """The survey's confirmation page: no header or footer, so only its own fixes."""
+    def sub(old, new, count):
+        nonlocal tpl
+        assert tpl.count(old) == count, ('thank-you', old[:60], tpl.count(old))
+        tpl = tpl.replace(old, new)
+
+    # The logo and the "Back to home" button go to the homepage.
+    sub('href="TBWI-Home.html"', 'href="/"', 2)
+    assert 'TBWI-' not in re.sub(r'<title>.*?</title>', '', tpl), 'thank-you links'
+    # head() needs a description; the page stays out of search (noindex).
+    sub('<meta name="robots" content="noindex">',
+        '<meta name="robots" content="noindex">\n  <meta name="description" content="Thank you for contacting The Beauty '
+        'and Wellness Institute. A member of our care team will reach out within one business day.">', 1)
+    # Name style, as on the other pages.
+    sub('alt="The Beauty and Wellness Institute, Dr. Pamela Chapman"', 'alt="The Beauty and Wellness Institute"', 1)
+    sub('next steps with Dr. Pamela Chapman.', 'next steps with Pamela Chapman, DO, DABOM.', 1)
+    assert 'Dr. Pamela Chapman' not in re.sub(r'/\*.*?\*/', '', tpl, flags=re.S), 'thank-you name'
+
+    # Layout. Phones: the 56px top and bottom padding and the gaps are trimmed
+    # so the whole message fits on one screen, and the two buttons stack at
+    # full width instead of wrapping unevenly. Short screens (small phones,
+    # landscape) get a smaller logo, badge and gaps; short landscape screens
+    # start at the top so the logo never sits under the browser bar.
+    sub('  </style>\n</helmet>',
+        '    @media (max-width: 560px) {\n'
+        '      main[data-screen-label="Thank You"] { padding: 40px 20px !important; }\n'
+        '      main[data-screen-label="Thank You"] h1 { margin-top: 22px !important; }\n'
+        '      main[data-screen-label="Thank You"] p { font-size: 1rem !important; }\n'
+        '      [data-ty-actions] { flex-direction: column; align-items: stretch; width: 100%; max-width: 340px; margin-top: 28px !important; }\n'
+        '      [data-ty-actions] > a { justify-content: center; }\n'
+        '    }\n'
+        '    @media (max-height: 700px) {\n'
+        '      main[data-screen-label="Thank You"] > a img { height: 72px !important; }\n'
+        '      main[data-screen-label="Thank You"] > div { margin-top: 26px !important; }\n'
+        '      main[data-screen-label="Thank You"] > div > span:first-child { width: 60px !important; height: 60px !important; }\n'
+        '      main[data-screen-label="Thank You"] h1 { margin-top: 18px !important; }\n'
+        '      main[data-screen-label="Thank You"] p { margin-top: 12px !important; line-height: 1.6 !important; }\n'
+        '      [data-ty-actions] { margin-top: 22px !important; }\n'
+        '    }\n'
+        '    @media (max-height: 560px) and (orientation: landscape) {\n'
+        '      main[data-screen-label="Thank You"] { justify-content: flex-start !important; padding-top: 28px !important; padding-bottom: 28px !important; }\n'
+        '    }\n'
+        '    @media (prefers-reduced-motion: reduce) {\n'
+        '      main[data-screen-label="Thank You"] *, main[data-screen-label="Thank You"] { animation: none !important; }\n'
+        '      main[data-screen-label="Thank You"] path { stroke-dashoffset: 0 !important; }\n'
+        '    }\n'
+        '  </style>\n</helmet>', 1)
+    sub('<div style="display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin-top:32px;',
+        '<div data-ty-actions="" style="display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin-top:32px;', 1)
     return tpl
 
 
